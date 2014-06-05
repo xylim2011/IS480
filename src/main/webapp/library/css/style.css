@@ -1,0 +1,72 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : May 16, 2014, 1:29:43 PM
+    Author     : Sherman
+*/
+
+
+.span40{
+    width: 40% !important;
+}
+
+.margin10{
+    margin:10px 10px 10px 10px !important;
+}
+.nav-bar{
+    height: 50px;
+    line-height: 50px;
+    background: #444;
+    color: #55acee;
+}
+
+.app-logo{
+    font-size:1.5em;
+    text-decoration: none;
+    cursor:pointer;
+}
+.content{
+    margin-top: 70px !important;
+}
+.signin-wrapper{
+    text-align: center;
+}
+.center{
+    text-align: center;
+    margin:auto;
+}
+
+blockquote.twitter-tweet {
+    display: inline-block;
+    padding: 16px;
+    margin: 10px 0;
+    width: 468px;
+
+    border: #ddd 1px solid;
+    border-top-color: #eee;
+    border-bottom-color: #bbb;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+
+    font: bold 14px/18px Helvetica, Arial, sans-serif;
+    color: #000;
+}
+
+blockquote.twitter-tweet p {
+    font: 1em Georgia, "Times New Roman", Palatino, serif;
+    margin: 0 5px 10px 0;
+}
+
+blockquote.twitter-tweet a[href^="https://twitter.com"] {
+    font-weight: normal;
+    color: #666;
+    font-size: 12px;
+}
+span.tweet-created{
+    font-size: 1rem;
+    color: #646464;
+    margin-left: 5px;
+}

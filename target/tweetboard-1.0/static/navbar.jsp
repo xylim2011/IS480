@@ -7,7 +7,7 @@
 <div class="nav-bar">
     <div class="container">
         <div class="pull-left ">
-            <div class="app-logo">MavenCreed</div>
+            <div class="app-logo">TweetBoard</div>
         </div>
         <div class="pull-right nav-wrapper">
 
