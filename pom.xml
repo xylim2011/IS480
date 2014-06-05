@@ -1,19 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-<<<<<<< HEAD
+    	<modelVersion>4.0.0</modelVersion>
 	<groupId>tweetboard</groupId>
 	<artifactId>tweetboard</artifactId>
 	<packaging>war</packaging>
 	<version>1.0</version>
 	<name>tweetboard</name>
-=======
-	<groupId>mavencreed</groupId>
-	<artifactId>mavencreed</artifactId>
-	<packaging>war</packaging>
-	<version>1.0</version>
-	<name>mavencreed</name>
->>>>>>> b949e2b9a4e3d21ace4cc2f39bf1a2b46f9add62
 	<repositories>
 		<repository>
 			<id>eap</id>
@@ -53,9 +45,6 @@
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<version>5.1.25</version>
-<<<<<<< HEAD
-		</dependency>           
-=======
 		</dependency>
 	 <dependency>
 	  <groupId>org.apache.httpcomponents</groupId>
@@ -81,7 +70,6 @@
 	  <version>20090211</version>
 	  <type>jar</type>
 	 </dependency>
->>>>>>> b949e2b9a4e3d21ace4cc2f39bf1a2b46f9add62
 	</dependencies>
 	<profiles>
 		<profile>
@@ -94,11 +82,7 @@
 			<!-- http://maven.apache.org/guides/mini/guide-building-for-different-environments.html -->
 			<id>openshift</id>
 			<build>
-<<<<<<< HEAD
 				<finalName>tweetboard</finalName>
-=======
-				<finalName>mavencreed</finalName>
->>>>>>> b949e2b9a4e3d21ace4cc2f39bf1a2b46f9add62
 				<plugins>
 					<plugin>
 						<artifactId>maven-war-plugin</artifactId>
