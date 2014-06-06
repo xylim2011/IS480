@@ -10,7 +10,9 @@
             <div class="app-logo">TweetBoard</div>
         </div>
         <div class="pull-right nav-wrapper">
-
+            <div class="nav-btns">
+                <span id="username"></span>
+            </div>
         </div>
     </div>
 

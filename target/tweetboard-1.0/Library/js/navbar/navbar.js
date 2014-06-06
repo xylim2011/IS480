@@ -8,3 +8,5 @@
 $('.app-logo').click(function(){
     window.location.href="home";
 })
+
+$('#username').text(user.username);

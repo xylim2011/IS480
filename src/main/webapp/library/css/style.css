@@ -19,10 +19,30 @@ and open the template in the editor.
 .nav-bar{
     height: 50px;
     line-height: 50px;
-    background: #444;
-    color: #55acee;
+    color: #444;
+background-image: -webkit-gradient(
+	linear,
+	left top,
+	left top,
+	color-stop(0, #F5F5F5),
+	color-stop(1, #55ACEE)
+);
+background-image: -o-linear-gradient(left top, #F5F5F5 0%, #55ACEE 100%);
+background-image: -moz-linear-gradient(left top, #F5F5F5 0%, #55ACEE 100%);
+background-image: -webkit-linear-gradient(left top, #F5F5F5 0%, #55ACEE 100%);
+background-image: -ms-linear-gradient(left top, #F5F5F5 0%, #55ACEE 100%);
+background-image: linear-gradient(to left top, #F5F5F5 0%, #55ACEE 100%);
 }
-
+.nav-btns:hover{
+    background:#fff
+}
+.nav-btns{
+    padding-left: 15px;
+    padding-right:15px;
+    border-left:1px solid #F1F1F1;
+    border-right:1px solid #F1F1F1;
+    cursor:pointer;
+}
 .app-logo{
     font-size:1.5em;
     text-decoration: none;
@@ -38,13 +58,16 @@ and open the template in the editor.
     text-align: center;
     margin:auto;
 }
-
+blockquote.twitter-tweet:hover{
+    background:#444;
+    color:#fff !important;
+}
 blockquote.twitter-tweet {
     display: inline-block;
     padding: 16px;
     margin: 10px 0;
     width: 468px;
-
+    cursor:pointer;
     border: #ddd 1px solid;
     border-top-color: #eee;
     border-bottom-color: #bbb;
@@ -67,6 +90,6 @@ blockquote.twitter-tweet a[href^="https://twitter.com"] {
 }
 span.tweet-created{
     font-size: 1rem;
-    color: #646464;
+    
     margin-left: 5px;
 }

@@ -6,4 +6,8 @@
 
 <script src="library/js/jquery/jqueryv1.11.1.js" type="text/javascript"></script>
 <script src="library/js/moment.js" type="text/javascript"></script>
+<script src="library/js/navbar/navbar.js" type="text/javascript"></script>
 
+<script>
+    console.log(user);
+    </script>

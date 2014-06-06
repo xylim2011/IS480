@@ -6,6 +6,10 @@
 
 <%@include file="../static/header.jsp" %> 
 <%@include file="../static/navbar.jsp" %> 
+
+<% if(session.getAttribute("twitterUser") != null){
+    %><script>var user = JSON.parse('<%=session.getAttribute("twitterUser")%>')</script><%
+}%>
 <body>
     <div class="container">
         <div class="content ">
@@ -15,7 +19,7 @@
                     <button class="btn btn-success" id="find_tweets">Find Tweets</button>
                 </div>
             </div>
-            <div class="tweets-wrapper">
+            <div class="col-md-4 tweets-wrapper">
 
             </div>
         </div>
