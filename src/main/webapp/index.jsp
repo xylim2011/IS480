@@ -12,5 +12,5 @@
 </body>
 
 <%@include file="../static/footer.jsp" %> 
-<script src="library/js//navbar/navbar.js" type="text/javascript"></script>
+<script src="library/js/navbar/navbar.js" type="text/javascript"></script>
 </html>

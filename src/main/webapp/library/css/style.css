@@ -8,7 +8,93 @@ and open the template in the editor.
     Author     : Sherman
 */
 
+body{
+    background: #121314
+}
+#expandingLoad{
+    display:none;    
+}
+#search:focus{
+    background:#D8D8D8;
+    color:#000;
+}
+#search{
+    width:100%;
+    height:60px;
+    line-height: 60px;
+    background:inherit;
+    outline:0;
+    color:#fff;
+    border:none !important
+}
+.searchword{
+    text-align:center;
+    color:#fff;
+    font-size:1.5em;
+}
+.clearfix:after {
+    content: ".";
+    display: block;
+    clear: both;
+    visibility: hidden;
+    line-height: 0;
+    height: 0;
+}
 
+.clearfix {
+    display: inline-block;
+}
+
+.tweets-wrapper{
+    margin-top: 80px;
+    width: 400px;
+    float: left;
+    display: inline-block;
+    padding: 20px;
+
+}
+.lesson_holder{
+    margin-left:250px;
+    width:auto;
+}
+.side_navdivider{
+    display: block;
+    //margin: 3px 0;
+    height: 0px;
+    width: 100%;
+    border-top: 1px solid #151515;
+    border-bottom: 1px solid #3C3C3C;
+}
+.side_navbtns_wrapper{
+    margin-top:80px;
+}
+.sidebar_icons:hover{
+    background:#84bd00
+}
+.sidebar_icons{
+    position: absolute;
+    display: inline-block !important;
+    top: 0;
+    width: 60px;
+    line-height: 60px;
+    right: 0;
+    background: #D8D8D8;
+    text-align: center;
+    font-size: 1.5em;
+    cursor:pointer
+}
+.side_navbtns{
+    height:60px;
+    position:relative;
+}
+.side_navbar{
+    position: fixed;
+    height: 100%;
+    width: 230px;
+    top: 0;
+    left: 0;
+    background: rgba(0,0,0,0.7);
+}
 .span40{
     width: 40% !important;
 }
@@ -17,21 +103,26 @@ and open the template in the editor.
     margin:10px 10px 10px 10px !important;
 }
 .nav-bar{
+    z-index:1;
     height: 50px;
     line-height: 50px;
+    position: fixed;
+    width: 100%;
+    top:0;
+    left:0;
     color: #444;
-background-image: -webkit-gradient(
-	linear,
-	left top,
-	left top,
-	color-stop(0, #F5F5F5),
-	color-stop(1, #55ACEE)
-);
-background-image: -o-linear-gradient(left top, #F5F5F5 0%, #55ACEE 100%);
-background-image: -moz-linear-gradient(left top, #F5F5F5 0%, #55ACEE 100%);
-background-image: -webkit-linear-gradient(left top, #F5F5F5 0%, #55ACEE 100%);
-background-image: -ms-linear-gradient(left top, #F5F5F5 0%, #55ACEE 100%);
-background-image: linear-gradient(to left top, #F5F5F5 0%, #55ACEE 100%);
+    background-image: -webkit-gradient(
+        linear,
+        left top,
+        left top,
+        color-stop(0, #F5F5F5),
+        color-stop(1, #55ACEE)
+        );
+    background-image: -o-linear-gradient(left top, #F5F5F5 0%, #55ACEE 100%);
+    background-image: -moz-linear-gradient(left top, #F5F5F5 0%, #55ACEE 100%);
+    background-image: -webkit-linear-gradient(left top, #F5F5F5 0%, #55ACEE 100%);
+    background-image: -ms-linear-gradient(left top, #F5F5F5 0%, #55ACEE 100%);
+    background-image: linear-gradient(to left top, #F5F5F5 0%, #55ACEE 100%);
 }
 .nav-btns:hover{
     background:#fff
@@ -59,21 +150,21 @@ background-image: linear-gradient(to left top, #F5F5F5 0%, #55ACEE 100%);
     margin:auto;
 }
 blockquote.twitter-tweet:hover{
-    background:#444;
-    color:#fff !important;
+
 }
 blockquote.twitter-tweet {
     display: inline-block;
+    background:#84bd00;
     padding: 16px;
     margin: 10px 0;
-    width: 468px;
+    width: 360px;
     cursor:pointer;
     border: #ddd 1px solid;
     border-top-color: #eee;
     border-bottom-color: #bbb;
     border-radius: 5px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.15);
-
+    white-space: pre-wrap;
     font: bold 14px/18px Helvetica, Arial, sans-serif;
     color: #000;
 }
@@ -83,13 +174,64 @@ blockquote.twitter-tweet p {
     margin: 0 5px 10px 0;
 }
 
-blockquote.twitter-tweet a[href^="https://twitter.com"] {
-    font-weight: normal;
-    color: #666;
+blockquote.twitter-tweet a {
+    font-weight: bold;
+    color: #fff;
     font-size: 12px;
 }
 span.tweet-created{
     font-size: 1rem;
-    
+
     margin-left: 5px;
+}
+.loader {
+    width: 150px;
+    height: 150px;
+    line-height: 150px;
+    position: fixed;
+    box-sizing: border-box;
+    text-align: center;
+    z-index: 0;
+    text-transform: uppercase;
+    top: 40%;
+    left: 50%;
+}
+
+.loader:before,
+.loader:after {
+    opacity: 0;
+    box-sizing: border-box;
+    content: "\0020";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 100px;
+    border: 5px solid #fff;
+    box-shadow: 0 0 50px #fff, inset 0 0 50px #fff;
+}
+
+.loader:after {
+    z-index: 1;
+    -webkit-animation: gogoloader 2s infinite 1s;
+}
+
+.loader:before {
+    z-index: 2;
+    -webkit-animation: gogoloader 2s infinite;
+}
+
+@-webkit-keyframes gogoloader {
+    0% {
+        -webkit-transform: scale(0);
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        -webkit-transform: scale(1);
+        opacity: 0;
+    }
 }

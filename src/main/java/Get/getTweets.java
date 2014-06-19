@@ -3,7 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package twitterController;
+
+package Get;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -27,8 +28,8 @@ import twitter4j.json.DataObjectFactory;
  *
  * @author Sherman
  */
-@WebServlet(name = "getTweetsByKeyword", urlPatterns = {"/getTweetsByKeyword"})
-public class getTweetsByKeyword extends HttpServlet {
+@WebServlet(name = "getTweets", urlPatterns = {"/getTweets"})
+public class getTweets extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -43,7 +44,7 @@ public class getTweetsByKeyword extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
-        try {
+      try {
             //get word searched
             String searchItem = (String) request.getParameter("keyword");
             System.out.println(searchItem);
@@ -62,7 +63,7 @@ public class getTweetsByKeyword extends HttpServlet {
             try {
                 Query query = new Query(searchItem + "+exclude:retweets");
                 query.setLang("en");
-                query.setCount(100);
+                query.setCount(15);
                 QueryResult result;
                 //do{
                 result = twitter.search(query);
