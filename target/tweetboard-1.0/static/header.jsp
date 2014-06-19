@@ -11,7 +11,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>TweetBoard | Beta</title>
          <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
-        <link href="library/css/bootstrap/bootstrap.css" rel="stylesheet" type="text/css" />
+        <link href="library/css/bootstrap/bootstrap.css" rel="stylesheet" type="text/css">
         <link href="library/css/style.css" rel="stylesheet" type="text/css" />
     </head>
 

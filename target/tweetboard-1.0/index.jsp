@@ -1,9 +1,3 @@
-<%-- 
-    Document   : index
-    Created on : Jun 5, 2014, 11:58:37 PM
-    Author     : Sherman
---%>
-
 <%@include file="../static/header.jsp" %> 
 <%@include file="../static/navbar.jsp" %> 
 <body>
