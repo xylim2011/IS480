@@ -10,7 +10,8 @@
 <% if(session.getAttribute("twitterUser") != null){
 %><script>var user = JSON.parse('<%=session.getAttribute("twitterUser")%>')</script><%
 }%>
-<body>
+<body id="home">
+    <div class="overlay"></div>
     <!-- side bar nav -->
     <div class="side_navbar">
         <div class="side_navbtns_wrapper">

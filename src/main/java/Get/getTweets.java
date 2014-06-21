@@ -62,6 +62,7 @@ public class getTweets extends HttpServlet {
 
             try {
                 Query query = new Query(searchItem + "+exclude:retweets");
+                long lastID = Long.MIN_VALUE; // remember the last tweet retrieved
                 query.setLang("en");
                 query.setCount(15);
                 QueryResult result;
@@ -71,11 +72,13 @@ public class getTweets extends HttpServlet {
                 JSONArray statuses = new JSONArray();
                 for (Status tweet : tweets) {
                     JSONObject twit = new JSONObject(DataObjectFactory.getRawJSON(tweet));
+                    if(tweet.getId() < lastID) lastID = tweet.getId();
                     System.out.println(twit);
                     statuses.put(twit);
                 }
                 //} while ((query = result.nextQuery()) != null);
                 out.println(statuses);
+              //  query.setSinceId(lastID);
             } catch (Exception te) {
                 te.printStackTrace();
                 System.out.println("Failed to search tweets: " + te.getMessage());

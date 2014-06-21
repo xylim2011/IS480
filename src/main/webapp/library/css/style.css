@@ -8,11 +8,19 @@ and open the template in the editor.
     Author     : Sherman
 */
 
-body{
-    background: #121314
+body#home{
+    position:fixed;
+
+    background:url('../../images/bg/skyline-sg.jpg') !important;
 }
-#expandingLoad{
-    display:none;    
+.tweetuser_username{
+    display: inline-block;
+    margin-left:10px;
+}
+.profilepic{
+    display:inline-block;
+    width:45px;
+    border-radius:50%;
 }
 #search:focus{
     background:#D8D8D8;
@@ -21,11 +29,40 @@ body{
 #search{
     width:100%;
     height:60px;
+    padding:10px;
     line-height: 60px;
     background:inherit;
     outline:0;
     color:#fff;
     border:none !important
+}
+.overlay{
+    position:fixed;
+    top:0;
+    left:0;
+    background:rgba(0,0,0,0.6);
+    height:100%;
+    width:100%;  
+}
+#overlay{
+    position:fixed;
+    top:0;
+    left:0;
+    background:rgba(0,0,0,0.7);
+    height:100%;
+    width:100%;       
+    display:none;
+}
+.delete:hover{
+    color:#FF9898;
+    cursor:pointer;
+}
+.tweetwrapper-icons{
+    position:absolute;
+    top:20px;
+    right:20px;
+    font-size:1.5em;
+    color:#fff;
 }
 .searchword{
     text-align:center;
@@ -46,12 +83,13 @@ body{
 }
 
 .tweets-wrapper{
+    position:relative;
     margin-top: 80px;
     width: 400px;
     float: left;
     display: inline-block;
     padding: 20px;
-
+    overflow-y:auto;
 }
 .lesson_holder{
     margin-left:250px;
@@ -64,6 +102,12 @@ body{
     width: 100%;
     border-top: 1px solid #151515;
     border-bottom: 1px solid #3C3C3C;
+}
+.bold{
+    font-weight:bold;
+}
+.green{
+   color: #118016 !important
 }
 .side_navbtns_wrapper{
     margin-top:80px;
@@ -92,6 +136,7 @@ body{
     height: 100%;
     width: 230px;
     top: 0;
+    border-right: 1px solid #BBB;
     left: 0;
     background: rgba(0,0,0,0.7);
 }
@@ -150,11 +195,11 @@ body{
     margin:auto;
 }
 blockquote.twitter-tweet:hover{
-
+background:#fff;
 }
 blockquote.twitter-tweet {
     display: inline-block;
-    background:#84bd00;
+    background:rgba(255, 255, 255, 0.82);
     padding: 16px;
     margin: 10px 0;
     width: 360px;
@@ -165,18 +210,22 @@ blockquote.twitter-tweet {
     border-radius: 5px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.15);
     white-space: pre-wrap;
+    overflow-wrap: break-word;
     font: bold 14px/18px Helvetica, Arial, sans-serif;
     color: #000;
+
 }
 
 blockquote.twitter-tweet p {
     font: 1em Georgia, "Times New Roman", Palatino, serif;
     margin: 0 5px 10px 0;
+    overflow-wrap: break-word;
+    margin-top:5px
 }
 
 blockquote.twitter-tweet a {
     font-weight: bold;
-    color: #fff;
+    color: #428bca;
     font-size: 12px;
 }
 span.tweet-created{
@@ -235,3 +284,23 @@ span.tweet-created{
         opacity: 0;
     }
 }
+::-webkit-scrollbar {
+    width: 10px;
+} 
+::-webkit-scrollbar-track {
+    background-color: #fff;
+    
+} /* the new scrollbar will have a flat appearance with the set background color */
+
+::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2); border-radius:20px
+    
+} /* this will style the thumb, ignoring the track */
+
+::-webkit-scrollbar-button {
+    background-color: #98D847;
+} /* optionally, you can style the top and the bottom buttons (left and right for horizontal bars) */
+
+::-webkit-scrollbar-corner {
+    background-color: black;
+} 
