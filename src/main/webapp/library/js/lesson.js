@@ -27,9 +27,8 @@ function initSearch() {
     $('<div class="tweets-wrapper"><div class="center"><span class="searchword">' + keyword + '</span>\n\
 <span class="tweetwrapper-icons"><i class="fa fa-cogs"></i>\n\
 <i class="fa fa-times delete"></i></span></div></div>').appendTo($(".lesson_holder"));
-    $.post("getTweets", {keyword: keyword}, function(tweets) {
-
-        console.log("tweets length : " + tweets.length)
+    $.post("getTweets", {keyword: keyword}, function(batch) {
+        var tweets = batch.tweets;        
         var count = 1;
         tweets.forEach(function(tweet) {
 
@@ -54,13 +53,11 @@ function initSearch() {
                 if (word.charAt(0) == '#') {
                     word = '<span class="green bold">' + word + "</span>";
                 }
-                finalTweet += word;
+                finalTweet += word + " ";
             })
             if (tweet.entities.urls.length > 0) {
                 //console.log(tweet.entities.urls[0].url + " -> " + "<a href='" + tweet.entities.urls[0].url + "' target='_blank'>" + tweet.entities.urls[0].display_url + '</a>' )
-                console.log(finalTweet)
                 finalTweet.replace(tweet.entities.urls[0].url, "<a href='" + tweet.entities.urls[0].url + "' target='_blank'>" + tweet.entities.urls[0].display_url + '</a>')
-                console.log(finalTweet)
             }
             var tc = "";
             tc += '<blockquote id="' + id + '" class="twitter-tweet" lang="en">';
@@ -75,13 +72,20 @@ function initSearch() {
             $(tc).appendTo($('.tweets-wrapper').last());
         })
         $('.tweets-wrapper').css('height', $(window).height());
+        addWrapperMeta(batch.latest,batch.oldest);
+        
         enableTwitterLink();
         initWrapperActions();
         $('#overlay').hide();
     }, "json")
 
 }
-
+function addWrapperMeta(latest,oldest){
+    var wrapper = $('.tweets-wrapper').last();
+    wrapper.data("lastest",latest);
+    wrapper.data("oldest",oldest);
+    console.log(wrapper.data("oldest"));
+}
 function initWrapperActions() {
     $('.delete').click(function() {
         $(this).closest(".tweets-wrapper").remove();
@@ -89,7 +93,10 @@ function initWrapperActions() {
 }
 function enableTwitterLink() {
     $('blockquote').click(function() {
-        console.log(this.id)
         window.open(this.id, '_blank')
     })
+}
+
+function update(){
+    
 }
