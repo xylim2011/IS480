@@ -59,10 +59,11 @@ public class getTweets extends HttpServlet {
 
             TwitterFactory tf = new TwitterFactory(cb.build());
             Twitter twitter = tf.getInstance();
-
+            JSONObject batch = new JSONObject();
             try {
                 Query query = new Query(searchItem + "+exclude:retweets");
-                long lastID = Long.MIN_VALUE; // remember the last tweet retrieved
+                long latest_tweet = Long.MAX_VALUE;
+                long oldest_tweet = 0;
                 query.setLang("en");
                 query.setCount(15);
                 QueryResult result;
@@ -70,14 +71,22 @@ public class getTweets extends HttpServlet {
                 result = twitter.search(query);
                 List<Status> tweets = result.getTweets();
                 JSONArray statuses = new JSONArray();
-                for (Status tweet : tweets) {
+                for (int i=0;i<tweets.size();i++) {
+                    Status tweet = tweets.get(i);
                     JSONObject twit = new JSONObject(DataObjectFactory.getRawJSON(tweet));
-                    if(tweet.getId() < lastID) lastID = tweet.getId();
+                    if(i == tweets.size()-1){
+                        oldest_tweet = tweet.getId();
+                    }else if (i==0){
+                        latest_tweet = tweet.getId();
+                    }
                     System.out.println(twit);
                     statuses.put(twit);
                 }
                 //} while ((query = result.nextQuery()) != null);
-                out.println(statuses);
+                batch.put("tweets", statuses);
+                batch.put("latest", latest_tweet);
+                batch.put("oldest", oldest_tweet);
+                out.println(batch);
               //  query.setSinceId(lastID);
             } catch (Exception te) {
                 te.printStackTrace();
