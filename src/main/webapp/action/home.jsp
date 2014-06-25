@@ -34,4 +34,6 @@
 
 <%@include file="../static/footer.jsp" %> 
 <script src="library/js/lesson.js" type="text/javascript"></script>
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8">
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+</html>
