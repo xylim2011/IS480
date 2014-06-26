@@ -68,6 +68,9 @@ h2 {
 .top-bar-section ul li:last-child {
 	line-height: 58px;
 }
+ul#menu li:last-child {
+	margin-left: 20px;
+}
 .top-bar-section ul li>a.button {
 	min-width: inherit !important;
 	padding-left: 30px;
@@ -188,6 +191,19 @@ header .large-8 {
 .download-btn:hover {
 	background-color:rgba(0,0,0,.25);
 	background-color:111
+}
+
+.signin-btn {
+	background-color: #ff6000;
+	padding:27px 141px;
+	background-image:url(../../../images/socialIcons/twitter-login-button.png);
+	float:left;
+	margin:20px 0 0 0;
+	border-radius:3px;
+	-moz-border-radius:3px;
+	-webkit-border-radius:3px;
+	-o-border-radius:3px;
+	-ms-border-radius:3px
 }
 
 /* Product */
@@ -1780,4 +1796,7 @@ you can use the generic selector below, but it's slower:
 	text-align: center;
 	color: red;
 	display:none;
+}
+#logo{
+	vertical-align: top;
 }

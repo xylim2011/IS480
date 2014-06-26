@@ -18,7 +18,6 @@
         <link rel="stylesheet" href="library/css/app-landing/normalize.css" />
         <link rel="stylesheet" href="library/css/app-landing/foundation.min.css" />
 		<link rel="stylesheet" href="library/css/app-landing/style.css" />
-		<link rel="stylesheet" href="library/css/app-landing/ie.css" />
 		<link href='http://fonts.googleapis.com/css?family=Noto+Sans:400,700' rel='stylesheet' type='text/css'>
 		<link href='http://fonts.googleapis.com/css?family=Cabin+Condensed:600' rel='stylesheet' type='text/css'>
     </head>
