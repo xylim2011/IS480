@@ -9,9 +9,23 @@ and open the template in the editor.
 */
 
 body#home{
-    position:fixed;
-
     background:url('../../images/bg/skyline-sg.jpg') !important;
+}
+.topic{
+    display:none;
+}
+.fixed{
+    position:fixed;
+}
+.sidenav_title{
+    width: 100%;
+    color: #fff;
+    /* text-align: center; */
+    display: inline-block;
+    height: 100%;
+    line-height: 60px;
+    font-size: 0.875em;
+    padding: 0 20px;
 }
 .tweetuser_username{
     display: inline-block;
@@ -29,11 +43,11 @@ body#home{
 #search{
     width:100%;
     height:60px;
-    padding:10px;
     line-height: 60px;
     background:inherit;
     outline:0;
     color:#fff;
+    padding: 0 20px;
     border:none !important
 }
 .overlay{
@@ -42,6 +56,7 @@ body#home{
     left:0;
     background:rgba(0,0,0,0.6);
     height:100%;
+    z-index: -1;
     width:100%;  
 }
 #overlay{
@@ -53,16 +68,22 @@ body#home{
     width:100%;       
     display:none;
 }
+.refresh:hover,
 .delete:hover{
     color:#FF9898;
     cursor:pointer;
 }
+.play:hover,
+.pause:hover{
+    color: #2F97FF;
+    cursor:pointer;
+}
 .tweetwrapper-icons{
-    position:absolute;
-    top:20px;
-    right:20px;
-    font-size:1.5em;
-    color:#fff;
+    position: absolute;
+    right: 10%;
+    font-size: 1.5em;
+    color: #fff;
+
 }
 .searchword{
     text-align:center;
@@ -77,23 +98,57 @@ body#home{
     line-height: 0;
     height: 0;
 }
-
+.hide{
+    display:none;
+}
 .clearfix {
     display: inline-block;
 }
 
 .tweets-wrapper{
     position:relative;
-    margin-top: 80px;
-    width: 400px;
+    margin-top: 10px;
+    width: 450px;
     float: left;
     display: inline-block;
     padding: 20px;
-    overflow-y:auto;
+    //overflow-y:auto;
+    padding-bottom:20px;
 }
 .lesson_holder{
     margin-left:250px;
     width:auto;
+
+}
+.tweet_content{
+    position:absolute;       
+    width: 410px;
+    float: left;
+    display: inline-block;
+    //  padding: 20px;
+    overflow-y:auto;
+    padding-bottom:20px;
+}
+.loadNewHolder:hover{
+    background: rgba(14, 105, 21, 1);
+}
+.loadNewHolder{
+    display:none;
+    position: absolute;
+    top: 100%;
+    left: 32%;
+    padding: 5px 20px;
+    background: rgba(14, 105, 21, 0.7);
+    color: #fff;
+    border-radius: 15px;
+    font-weight: bold;
+    z-index: 1;
+    cursor:pointer;
+    -webkit-animation: fadein 1s; /* Safari and Chrome */
+    -moz-animation: fadein 1s; /* Firefox */
+    -ms-animation: fadein 1s; /* Internet Explorer */
+    -o-animation: fadein 1s; /* Opera */
+    animation: fadein 1s;
 }
 .side_navdivider{
     display: block;
@@ -107,12 +162,18 @@ body#home{
     font-weight:bold;
 }
 .green{
-   color: #118016 !important
+    color: #118016 !important
+}
+.tweet_header{
+    padding: 20px 10px;
+    background: rgba(0, 0, 0, 0.51);
+    border: 1px solid #fff;
+    box-shadow: 0 0 15px #6DF7F6;
 }
 .side_navbtns_wrapper{
     margin-top:80px;
 }
-.sidebar_icons:hover{
+#find_tweets:hover{
     background:#84bd00
 }
 .sidebar_icons{
@@ -122,14 +183,15 @@ body#home{
     width: 60px;
     line-height: 60px;
     right: 0;
-    background: #D8D8D8;
+    color: #D8D8D8;
     text-align: center;
-    font-size: 1.5em;
+    font-size: 1em;
     cursor:pointer
 }
 .side_navbtns{
     height:60px;
     position:relative;
+    cursor:pointer;
 }
 .side_navbar{
     position: fixed;
@@ -143,7 +205,9 @@ body#home{
 .span40{
     width: 40% !important;
 }
-
+.relative{
+    position:relative;
+}
 .margin10{
     margin:10px 10px 10px 10px !important;
 }
@@ -195,14 +259,14 @@ body#home{
     margin:auto;
 }
 blockquote.twitter-tweet:hover{
-background:#fff;
+    background:#fff;
 }
 blockquote.twitter-tweet {
     display: inline-block;
     background:rgba(255, 255, 255, 0.82);
     padding: 16px;
     margin: 10px 0;
-    width: 360px;
+    width: 394px;
     cursor:pointer;
     border: #ddd 1px solid;
     border-top-color: #eee;
@@ -213,9 +277,17 @@ blockquote.twitter-tweet {
     overflow-wrap: break-word;
     font: bold 14px/18px Helvetica, Arial, sans-serif;
     color: #000;
+    text-align: center;
+    -webkit-animation: fadein 1s; /* Safari and Chrome */
+    -moz-animation: fadein 1s; /* Firefox */
+    -ms-animation: fadein 1s; /* Internet Explorer */
+    -o-animation: fadein 1s; /* Opera */
+    animation: fadein 1s;
 
 }
-
+.tweetwrapper-icons i {
+    width:20px;
+}
 blockquote.twitter-tweet p {
     font: 1em Georgia, "Times New Roman", Palatino, serif;
     margin: 0 5px 10px 0;
@@ -234,6 +306,7 @@ span.tweet-created{
     margin-left: 5px;
 }
 .loader {
+    color:#fff;
     width: 150px;
     height: 150px;
     line-height: 150px;
@@ -289,18 +362,213 @@ span.tweet-created{
 } 
 ::-webkit-scrollbar-track {
     background-color: #fff;
-    
+
 } /* the new scrollbar will have a flat appearance with the set background color */
 
 ::-webkit-scrollbar-thumb {
-    background-color: rgba(0, 0, 0, 0.2); border-radius:20px
-    
+    background-color: rgba(0, 0, 0, 0.7); border-radius:20px
+
 } /* this will style the thumb, ignoring the track */
 
 ::-webkit-scrollbar-button {
-    background-color: #98D847;
+    //  background-color: #98D847;
 } /* optionally, you can style the top and the bottom buttons (left and right for horizontal bars) */
 
 ::-webkit-scrollbar-corner {
     background-color: black;
 } 
+
+@keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* Firefox */
+@-moz-keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* Safari and Chrome */
+@-webkit-keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* Internet Explorer */
+@-ms-keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}​
+
+/**grid system88/
+/* Grid style; make sure parent containers have full height */
+.gt-grid {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+    -webkit-backface-visibility: hidden;
+}
+
+.gt-grid > div {
+    width: 20%;
+    height: 20%;
+    float: left;
+    background-color: #ddd;
+    position: relative;
+    opacity: 1;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05);
+}
+
+.gt-grid > div:hover:before,
+.gt-grid > div.special:before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: rgba(0,0,0,0.03);
+}
+
+.gt-grid > div:hover:before {
+    background: rgba(0,0,0,0.05);
+}
+
+.gt-grid > div.gt-hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.gt-grid > div.gt-visible {
+    z-index: 999;
+}
+
+/* Some content styles */
+.gt-grid > div:first-child {
+    background-image: url(../images/changeme.png);
+    background-repeat: no-repeat;
+    background-position: 45px 10px;
+}
+
+.gt-grid > div h1,
+.gt-grid > div h3 {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    margin: 0;
+    cursor: default;
+}
+
+.gt-grid > div h1 {
+    padding: 0.5em;
+    line-height: 0.9;
+    font-weight: 300;
+    text-align: right;
+}
+
+.gt-grid > div h3 {
+    font-size: 1.05em;
+    padding: 1em;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+.gt-grid > div {
+
+    color:#fff;
+    padding: 1em;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+/* The little grid to control the number of items */
+.gt-grid-control {
+    position: fixed;
+    z-index: 1000;
+    cursor: pointer;
+    top: 10px;
+    left: 10px;
+    width: 30px;
+    height: 30px;
+}
+
+.gt-grid-icon {
+    margin: 5px;
+    display: block;
+    font-size: 23px;
+    -webkit-transition: opacity 0.2s;
+    transition: opacity 0.2s;
+}
+
+.gt-grid-icon:before {
+    font-family: 'minicons-webalys';
+    font-style: normal;
+    font-weight: normal;
+    speak: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    text-shadow: 0 1px 0 rgba(0,0,0,0.1);
+    content: '\e000';
+    color: #000;
+    color: rgba(0,0,0,0.35);
+}
+
+.gt-grid-select {
+    width: 112px;
+    height: 112px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    visibility: hidden;
+    opacity: 0;
+    -webkit-transition: all 0.2s;
+    transition: all 0.2s;
+    border: 1px solid rgba(0,0,0,0.3);
+}
+
+.gt-grid-select > div {
+    width: 22px;
+    height: 22px;
+    background: rgba(0,0,0,0.3);
+    float: left;
+    border: 1px solid rgba(0,0,0,0.3);
+}
+
+.no-touch .gt-grid-control:hover .gt-grid-icon,
+.gt-grid-control.gt-grid-control-open .gt-grid-icon {
+    opacity: 0;
+}
+
+.no-touch .gt-grid-control:hover .gt-grid-select,
+.gt-grid-control.gt-grid-control-open .gt-grid-select {
+    visibility: visible;
+    opacity: 1;
+}
+
+.gt-grid-select .gt-grid-selected {
+    background:  rgba(255, 255, 255, 0.65);
+}
+
+.gt-grid-select .gt-grid-hover {
+    box-shadow: inset 0 0 0 10px rgba(0, 120, 231, 0.44);
+}
+
+/* Demo 2: Transition, no delays */
+.topic .gt-grid > div {
+    background:rgba(0, 0, 0, 0.82);
+    -webkit-transform: scale(1);
+    -moz-transform: scale(1);
+    transform: scale(1);
+}
+
+.topic .gt-grid > div.gt-hidden {
+    background-color: #fcdd4d;
+    -webkit-transform: scale(.8);
+    -moz-transform: scale(.8);
+    transform: scale(.8);
+}
+.topic{
+    position:fixed;
+    width:100%;
+    height:100%;
+}

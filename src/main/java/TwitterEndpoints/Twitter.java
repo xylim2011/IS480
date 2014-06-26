@@ -56,10 +56,11 @@ import org.json.JSONObject;
 
 public class Twitter {
 
-    private String twitter_consumer_key = "NZ1vO3msP4o10b3dh3XVmHLfZ";
-    private String twitter_consumer_secret = "WwtUvjnyLAPXmghFBARbmcxDgVw06QwiMmpwBGCyP8XQWsmcXr";
-    private static String twitter_access_token= "2331328867-qgnT1qjFEwFtwO4bGNKWO7wznvDL9nKcZkFcb7t";
-    private static String twitter_access_token_secret= "hkocXDkZPGYuBLNU6lSw76DT2JakyqXk1yOzWjgmY8MxK";
+    private static String twitter_consumer_key = "NZ1vO3msP4o10b3dh3XVmHLfZ";
+    private static String twitter_consumer_secret = "WwtUvjnyLAPXmghFBARbmcxDgVw06QwiMmpwBGCyP8XQWsmcXr";
+    private static String twitter_access_token = "2331328867-qgnT1qjFEwFtwO4bGNKWO7wznvDL9nKcZkFcb7t";
+    private static String twitter_access_token_secret = "hkocXDkZPGYuBLNU6lSw76DT2JakyqXk1yOzWjgmY8MxK";
+
     public static String encode(String value) {
         String encoded = null;
         try {
@@ -147,7 +148,7 @@ public class Twitter {
         // each request to the twitter API 1.1 requires an "Authorization: BLAH" header. The following is what BLAH should look like
         String authorization_header_string = "OAuth oauth_consumer_key=\"" + twitter_consumer_key + "\",oauth_signature_method=\"HMAC-SHA1\",oauth_timestamp=\""
                 + oauth_timestamp + "\",oauth_nonce=\"" + oauth_nonce + "\",oauth_version=\"1.0\",oauth_signature=\"" + encode(oauth_signature) + "\"";
-        String verifier_or_pin ="";
+        String verifier_or_pin = "";
         String oauth_token = "";
         String oauth_token_secret = "";
         //String oauth_callback_confirmed = "";
@@ -155,7 +156,7 @@ public class Twitter {
             // initialize the HTTPS connection
             DefaultHttpClientConnection conn = new DefaultHttpClientConnection();
             BasicHttpEntityEnclosingRequest request = new BasicHttpEntityEnclosingRequest(get_or_post, twitter_endpoint_path);
-            HttpResponse response = createHTTPConnection(twitter_endpoint, twitter_endpoint_host, twitter_endpoint_path, authorization_header_string,verifier_or_pin, conn,request);
+            HttpResponse response = createHTTPConnection(twitter_endpoint, twitter_endpoint_host, twitter_endpoint_path, authorization_header_string, verifier_or_pin, conn, request);
 
             if (response.getStatusLine().toString().indexOf("200") == -1) // if it wasn't a successful request, then this error code will be something other than 200, return indicating as such
             {
@@ -244,7 +245,7 @@ public class Twitter {
         String parameter_string = "oauth_consumer_key=" + twitter_consumer_key + "&oauth_nonce=" + oauth_nonce + "&oauth_signature_method=" + oauth_signature_method
                 + "&oauth_timestamp=" + oauth_timestamp + "&oauth_token=" + encode(oauth_token) + "&oauth_version=1.0";
         //System.out.println("parameter_string=" + parameter_string);
-System.out.println("Parameters: " + parameter_string);
+        System.out.println("Parameters: " + parameter_string);
         String twitter_endpoint = "https://api.twitter.com/oauth/access_token";
         String twitter_endpoint_host = "api.twitter.com";
         String twitter_endpoint_path = "/oauth/access_token";
@@ -263,7 +264,7 @@ System.out.println("Parameters: " + parameter_string);
         String authorization_header_string = "OAuth oauth_consumer_key=\"" + twitter_consumer_key + "\",oauth_signature_method=\"HMAC-SHA1\",oauth_timestamp=\"" + oauth_timestamp
                 + "\",oauth_nonce=\"" + oauth_nonce + "\",oauth_version=\"1.0\",oauth_signature=\"" + encode(oauth_signature) + "\",oauth_token=\"" + encode(oauth_token) + "\"";
         // System.out.println("authorization_header_string=" + authorization_header_string);
-String verifier =verifier_or_pin;
+        String verifier = verifier_or_pin;
         String access_token = "";
         String access_token_secret = "";
         String user_id = "";
@@ -271,8 +272,8 @@ String verifier =verifier_or_pin;
 
         try {
             DefaultHttpClientConnection conn = new DefaultHttpClientConnection();
-             BasicHttpEntityEnclosingRequest request = new BasicHttpEntityEnclosingRequest(get_or_post, twitter_endpoint_path);
-            HttpResponse response = createHTTPConnection(twitter_endpoint, twitter_endpoint_host, twitter_endpoint_path, authorization_header_string,verifier, conn,request);
+            BasicHttpEntityEnclosingRequest request = new BasicHttpEntityEnclosingRequest(get_or_post, twitter_endpoint_path);
+            HttpResponse response = createHTTPConnection(twitter_endpoint, twitter_endpoint_host, twitter_endpoint_path, authorization_header_string, verifier, conn, request);
             String responseBody = EntityUtils.toString(response.getEntity());
             if (response.getStatusLine().toString().indexOf("200") == -1) // response from twitter wasn't 200, that's bad
             {
@@ -323,11 +324,11 @@ String verifier =verifier_or_pin;
     // This is the search example, using a GET call
     // INPUT: the search query (q), the user's access_token and the user's access_token_secret
     // OUTPUT: if successful, twitter API will return a json object of tweets
-    public JSONObject searchTweets(String q, String access_token, String access_token_secret) {
+    public static JSONObject searchTweets(String q, String access_token, String access_token_secret) {
         JSONObject jsonresponse = new JSONObject();
 
-        String oauth_token = access_token;
-        String oauth_token_secret = access_token_secret;
+        String oauth_token = twitter_access_token;
+        String oauth_token_secret = twitter_access_token_secret;
 
         // generate authorization header
         String get_or_post = "GET";
@@ -369,8 +370,8 @@ String verifier =verifier_or_pin;
 
         DefaultHttpClientConnection conn = new DefaultHttpClientConnection();
         BasicHttpEntityEnclosingRequest request = new BasicHttpEntityEnclosingRequest(get_or_post, twitter_endpoint + "?lang=en&result_type=mixed&q=" + encode(q) + "&count=100");
-        HttpResponse response = createHTTPConnection(twitter_endpoint, twitter_endpoint_host, twitter_endpoint_path, authorization_header_string,verifier,conn,request);
-System.out.println(response);
+        HttpResponse response = createHTTPConnection(twitter_endpoint, twitter_endpoint_host, twitter_endpoint_path, authorization_header_string, verifier, conn, request);
+        System.out.println(response);
         try {
 
             if (response.getStatusLine().toString().indexOf("500") != -1) {
@@ -1013,12 +1014,12 @@ System.out.println(response);
         return jsonresponse;
     }
 
-    public static HttpResponse createHTTPConnection(String twitter_endpoint, String twitter_endpoint_host, String twitter_endpoint_path, String authorization_header_string,String verifier_or_pin, DefaultHttpClientConnection conn,BasicHttpEntityEnclosingRequest request) {
-        String verifier ="";
-        if(!verifier_or_pin.equals("")){
-            verifier="oauth_verifier=" + encode(verifier_or_pin);
+    public static HttpResponse createHTTPConnection(String twitter_endpoint, String twitter_endpoint_host, String twitter_endpoint_path, String authorization_header_string, String verifier_or_pin, DefaultHttpClientConnection conn, BasicHttpEntityEnclosingRequest request) {
+        String verifier = "";
+        if (!verifier_or_pin.equals("")) {
+            verifier = "oauth_verifier=" + encode(verifier_or_pin);
         }
-        
+
         HttpResponse response = null;
         HttpParams params = new SyncBasicHttpParams();
         HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
@@ -1050,7 +1051,6 @@ System.out.println(response);
             socket.connect(new InetSocketAddress(host.getHostName(), host.getPort()), 0);
             conn.bind(socket, params);
 
-            
             request.setEntity(new StringEntity(verifier, "application/x-www-form-urlencoded", "UTF-8"));
             System.out.println("request: " + request + "verifier: " + verifier);
             request.setParams(params);

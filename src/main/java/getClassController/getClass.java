@@ -1,6 +1,5 @@
 package getClassController;
 
-import TwitterEndpoints.Twitter;
 
 import java.io.IOException;
 import java.io.PrintWriter;

@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package Get;
 
 import java.io.IOException;
@@ -23,7 +22,7 @@ import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
 import twitter4j.json.DataObjectFactory;
-
+import TwitterEndpoints.*;
 /**
  *
  * @author Sherman
@@ -44,10 +43,19 @@ public class getTweets extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
-      try {
+        try {
             //get word searched
             String searchItem = (String) request.getParameter("keyword");
-            System.out.println(searchItem);
+
+            String load = null;
+            String update = null;
+            if (request.getParameter("load") != null) {
+                load = (String) request.getParameter("load");
+            }
+            if (request.getParameter("update") != null) {
+                update = (String) request.getParameter("update");
+            }
+
             //set up keys locally
             ConfigurationBuilder cb = new ConfigurationBuilder();
             cb.setJSONStoreEnabled(true);
@@ -60,26 +68,35 @@ public class getTweets extends HttpServlet {
             TwitterFactory tf = new TwitterFactory(cb.build());
             Twitter twitter = tf.getInstance();
             JSONObject batch = new JSONObject();
+      
             try {
-                Query query = new Query(searchItem + "+exclude:retweets");
-                long latest_tweet = Long.MAX_VALUE;
+               // Query query = new Query(searchItem + "+exclude:retweets");
+                 Query query = new Query(searchItem);
+                long latest_tweet = 0;
                 long oldest_tweet = 0;
-                query.setLang("en");
-                query.setCount(15);
+                //query.setLang("en");
+                query.setCount(25);
+                query.setResultType(Query.RECENT);
+                if (load != null) {
+                    query.setMaxId(Long.parseLong(load) - 1);
+                }else if(update != null){
+                    query.setSinceId(Long.parseLong(update) + 1);
+                }
                 QueryResult result;
                 //do{
                 result = twitter.search(query);
                 List<Status> tweets = result.getTweets();
+               
                 JSONArray statuses = new JSONArray();
-                for (int i=0;i<tweets.size();i++) {
+                for (int i = 0; i < tweets.size(); i++) {
                     Status tweet = tweets.get(i);
                     JSONObject twit = new JSONObject(DataObjectFactory.getRawJSON(tweet));
-                    if(i == tweets.size()-1){
+                    if (i == tweets.size() - 1) {
                         oldest_tweet = tweet.getId();
-                    }else if (i==0){
+                    } else if (i == 0) {
                         latest_tweet = tweet.getId();
                     }
-                    System.out.println(twit);
+                   
                     statuses.put(twit);
                 }
                 //} while ((query = result.nextQuery()) != null);
@@ -87,7 +104,7 @@ public class getTweets extends HttpServlet {
                 batch.put("latest", latest_tweet);
                 batch.put("oldest", oldest_tweet);
                 out.println(batch);
-              //  query.setSinceId(lastID);
+                //  query.setSinceId(lastID);
             } catch (Exception te) {
                 te.printStackTrace();
                 System.out.println("Failed to search tweets: " + te.getMessage());
