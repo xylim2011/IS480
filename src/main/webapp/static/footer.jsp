@@ -12,4 +12,4 @@
 <script src="library/js/tweetboard.js" type="text/javascript"></script>
 <script src="library/js/cookie.js" type="text/javascript"></script>
 <script src="library/js/moment.js" type="text/javascript"></script>
-<script src="library/js/navbar/navbar.js" type="text/javascript"></script>
+<script src="library/js/custom.modernizr.js"></script>
