@@ -8,6 +8,14 @@
     <servlet-name>home</servlet-name>
     <jsp-file>/action/home.jsp</jsp-file>
   </servlet>
+    <servlet-mapping>
+    <servlet-name>lesson</servlet-name>
+    <url-pattern>/lesson</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>lesson</servlet-name>
+    <jsp-file>/action/lesson.jsp</jsp-file>
+  </servlet>
   <servlet-mapping>
     <servlet-name>index</servlet-name>
     <url-pattern>/index</url-pattern>
