@@ -6,16 +6,21 @@
 package signUpController;
 
 import TwitterEndpoints.Twitter;
+
 import java.io.IOException;
 import java.io.PrintWriter;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.json.JSONObject;
+
+import twitter4j.User;
 
 /**
  *
@@ -25,6 +30,11 @@ import org.json.JSONObject;
 public class sign_in extends HttpServlet {
 
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = -3799289478980759678L;
+
+	/**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
      *
@@ -50,39 +60,46 @@ public class sign_in extends HttpServlet {
             if (request.getParameter("oauth_verifier") != null) {
                 oauth_verifier = (String) request.getParameter("oauth_verifier");
             }
+            System.out.println("58 token: " + oauth_token);
+            System.out.println("59 verifier: " + oauth_verifier);
             /*
             Need to check if current user has his accesstoken saved in our database here before proceeding
             */
 
             /*
-             Check for oauth_token and oauth_verifier. If present, user has authenticated. ->Request for user's access token
+             Check for oauth_token and oauth_verifier. 
+             If present, user has authenticated. ->Request for user's access token
              Else Ask Twitter for it first. Twitter's callback url is directed back here
              */
             if (oauth_token == null && oauth_verifier == null) {
-                 System.out.println("Authenticated- no" + oauth_token);
+                System.out.println("67 Authenticated- no " + oauth_token);
                 if (type.equals("twitter")) {
                     JSONObject authToken = twitter.startTwitterAuthentication();
                     String redirectURL = "https://api.twitter.com/oauth/authenticate?oauth_token=" + authToken.getString("oauth_token");
                     response.sendRedirect(redirectURL);
                 }
-            } else {
+            } 
+            else {
                
                 JSONObject userDetails = twitter.getTwitterAccessTokenFromAuthorizationCode(oauth_token, oauth_verifier);
                
-                
                 //save the 4 attributes in database for user
                 String user_id = userDetails.getString("user_id");
                 String screen_name = userDetails.getString("screen_name");
-;
-                JSONObject user_session = new JSONObject("{id:'" + user_id +"',username:'" + screen_name + "'}");
+                String token = userDetails.getString("access_token");
+                String secret = userDetails.getString("access_token_secret");
+                JSONObject user_session = new JSONObject("{id:'" + user_id +"',username:'" + screen_name + "',token:'" + token + "',secret:'" + secret + "'}");
                 session.setAttribute("twitterUser",user_session);
+                response.addCookie(new Cookie("i",user_id));
                 response.sendRedirect("home");
                 
             }
 
-        } catch (Exception e) {
+        } 
+        catch (Exception e) {
             e.printStackTrace();
-        } finally {
+        } 
+        finally {
             out.close();
         }
     }
