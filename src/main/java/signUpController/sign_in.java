@@ -5,8 +5,6 @@
  */
 package signUpController;
 
-import TwitterEndpoints.Twitter;
-
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -20,12 +18,12 @@ import javax.servlet.http.HttpSession;
 
 import org.json.JSONObject;
 
-import twitter4j.User;
 
 /**
  *
  * @author Sherman
  */
+import TwitterEndpoints.Twitter;
 @WebServlet(name = "sign_in", urlPatterns = {"/sign_in"})
 public class sign_in extends HttpServlet {
 
