@@ -9,8 +9,12 @@
     <div class="side_navbtns_wrapper">
         <div class="side_navdivider"></div>
         <div class="side_navbtns">
-            <input type="text" id="search" value="" placeholder="    Search">
-            <div class="sidebar_icons" id="find_tweets" ><i class="fa fa-search"></i></div>
+            <input type="text" id="search" value="" placeholder="Search">
+            <div class="sidebar_icons" id="find_tweets" ><span class="glyphicon glyphicon-search"></span></div>
+        </div>
+           <div class="side_navbtns">
+               <span class="sidenav_title">Log out</span>
+            <div class="sidebar_icons"><span class="glyphicon glyphicon-off"></span></div>
         </div>
         <div class="side_navdivider"></div>
     </div>

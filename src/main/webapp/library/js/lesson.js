@@ -22,6 +22,12 @@ function search() {
 
         }
     })
+    $('#search').focus(function() {
+        $('#find_tweets').css('color', '#444')
+    })
+    $('#search').focusout(function() {
+        $('#find_tweets').css('color', '#D8D8D8')
+    })
 }
 function initSearch() {
 
@@ -31,7 +37,7 @@ function initSearch() {
 <span class="tweetwrapper-icons"><span class="glyphicon player glyphicon-pause pause"></span>\n\
 <span class="glyphicon glyphicon-remove delete"></span></span></div><div class="loadNewHolder"><span class="newLoad"></span> new tweets</div><div class="tweet_content"></div></div>').appendTo($(".lesson_holder"));
     $this = $('.tweets-wrapper').last().find($('.tweet_content'));
-    $.post("getTweets", {keyword: keyword}, function(batch) {
+    $.get("getTweets", {keyword: keyword}, function(batch) {
         var tweets = batch.tweets;
         createTweetDisplay(tweets, $this, "append", "show");
         $this.css('height', $(window).height());
@@ -52,21 +58,17 @@ function updateInterval() {
     var time = Number(5500) * (Number($('.tweet_content').length) - Number($('.paused').length))
     clearInterval(autorefresh);
     autorefresh = setInterval(loadNew, time)
-    console.log(autorefresh)
 }
 function showAll() {
     $('.loadNewHolder').click(function() {
         //console.log($(this).closest('.tweet-content').find(($('blockquotes'))));
-
         $(this).siblings($('.tweet-content')).find('blockquote').removeClass('hide');
-
         $(this).siblings($('.tweet-content')).animate({scrollTop: 0}, 1000)
         $(this).fadeOut()
-        //$(this).next('.tweet-content').find('blockquotes').removeClass('hide');
     })
 }
 function initWrapperActions() {
-    $(".delete , .player").unbind('click');
+    $(".delete , .player,.topic").unbind('click');
     $('.delete').click(function() {
         $(this).closest(".tweets-wrapper").remove();
         updateInterval();
@@ -75,24 +77,30 @@ function initWrapperActions() {
         if ($(this).hasClass('glyphicon-play play')) {
             //handle play
             $(this).addClass('glyphicon-pause pause').removeClass('glyphicon-play play');
-            console.log("play")
-            console.log($(this).closest('.tweet_header').siblings('.tweet_content'));
             $(this).closest('.tweet_header').siblings('.tweet_content').removeClass('paused');
             updateInterval();
         } else {
             //handle pause
             $(this).removeClass('glyphicon-pause pause').addClass('glyphicon-play play');
-            console.log("pause")
-
-            console.log($(this).closest('.tweet_header').siblings('.tweet_content'));
             $(this).closest('.tweet_header').siblings('.tweet_content').addClass('paused');
             updateInterval();
 
         }
     })
+    $('.tweets-wrapper').click(function(){
+        $('#topic').fadeIn(500);
+        var word = $(this).find($('.searchword')).text();
+        loadTopic(word);
+    })
 
 
 
+}
+
+function loadTopic(word){
+       $.get("getTweets", {keyword: keyword}, function(batch) {
+           
+       },"json");
 }
 function enableTwitterLink() {
     $('blockquote').click(function() {
@@ -103,11 +111,8 @@ function createTweetDisplay(tweets, wrapper, insertionPt, display) {
     var count = 1;
     var tc = "";
     tweets.forEach(function(tweet) {
-
         var time = moment(tweet.created_at).zone("+8:00");
-
         var date = time._d;
-
         var dateSplit = String(date).split(" ");
         var date_created = dateSplit[2] + " " + dateSplit[1] + " " + dateSplit[0] + " " + dateSplit[3] + " " + dateSplit[4];
         var id = 'https://twitter.com/' + tweet.user.screen_name + "/statuses/" + tweet.id_str;
@@ -128,7 +133,6 @@ function createTweetDisplay(tweets, wrapper, insertionPt, display) {
             finalTweet += word + " ";
         })
         if (tweet.entities.urls.length > 0) {
-            //console.log(tweet.entities.urls[0].url + " -> " + "<a href='" + tweet.entities.urls[0].url + "' target='_blank'>" + tweet.entities.urls[0].display_url + '</a>' )
             finalTweet.replace(tweet.entities.urls[0].url, "<a href='" + tweet.entities.urls[0].url + "' target='_blank'>" + tweet.entities.urls[0].display_url + '</a>')
         }
         if (display == "show") {
@@ -211,3 +215,211 @@ function loadNew() {
     })
 
 }
+
+/**
+ * gridSelector.js v1.0.0
+ * http://www.codrops.com
+ *
+ * Licensed under the MIT license.
+ * http://www.opensource.org/licenses/mit-license.php
+ * 
+ * Copyright 2013, Codrops
+ * http://www.codrops.com
+ */
+;
+(function(window) {
+
+    'use strict';
+
+    function extend(a, b) {
+        for (var key in b) {
+            if (b.hasOwnProperty(key)) {
+                a[key] = b[key];
+            }
+        }
+        return a;
+    }
+
+    function gridSelector(el, options) {
+        this.el = el;
+        this.options = extend(this.defaults, options);
+        this._init();
+    }
+
+    gridSelector.prototype = {
+        defaults: {
+            rows: 5,
+            columns: 5,
+            maxcolumns: 5,
+            onClick: function() {
+                return false;
+            }
+        },
+        _init: function() {
+            this.trigger = this.el.querySelector('span.gt-grid-icon');
+            this.gridItems = Array.prototype.slice.call(this.el.querySelectorAll('div.gt-grid-select > div'));
+            this._setRowsColumns(this.options.rows, this.options.columns);
+            this.maxcolumns = this.options.maxcolumns;
+            this.gridItems.forEach(function(el, i) {
+                classie.add(el, 'gt-grid-selected');
+            });
+            this._initEvents();
+        },
+        _initEvents: function() {
+
+            var self = this;
+
+            if (Modernizr.touch) {
+                this.trigger.addEventListener('click', function(ev) {
+                    classie.add(self.el, 'gt-grid-control-open');
+                });
+            }
+
+            this.gridItems.forEach(function(el, i) {
+                el.addEventListener('mouseover', function(ev) {
+                    self._highlightGridItems(self.gridItems.indexOf(this));
+                });
+
+                el.addEventListener('click', function(ev) {
+                    self._selectGridItems(self.gridItems.indexOf(this));
+                    if (Modernizr.touch) {
+                        classie.remove(self.el, 'gt-grid-control-open');
+                    }
+                });
+            });
+
+        },
+        _highlightGridItems: function(pos) {
+
+            // item's row and column
+            var self = this,
+                    itemRow = Math.floor(pos / this.options.maxcolumns),
+                    itemColumn = pos - itemRow * this.options.maxcolumns;
+
+            this.gridItems.forEach(function(el, i) {
+                // el's row and column
+                var elpos = self.gridItems.indexOf(el),
+                        elRow = Math.floor(elpos / self.options.maxcolumns),
+                        elColumn = elpos - elRow * self.options.maxcolumns;
+
+                if (elRow <= itemRow && elColumn <= itemColumn) {
+                    classie.add(el, 'gt-grid-hover');
+                }
+                else {
+                    classie.remove(el, 'gt-grid-hover');
+                }
+            });
+
+        },
+        _selectGridItems: function(pos) {
+            var self = this;
+            this.gridItems.forEach(function(el, i) {
+                if (classie.has(el, 'gt-grid-hover')) {
+                    classie.add(el, 'gt-grid-selected');
+                }
+                else {
+                    classie.remove(el, 'gt-grid-selected');
+                }
+            });
+            var r = this.rows = Math.floor(pos / this.options.maxcolumns),
+                    c = this.columns = pos - this.rows * this.options.maxcolumns;
+
+            this._setRowsColumns(r + 1, c + 1);
+            this.options.onClick();
+        },
+        _setRowsColumns: function(rows, columns) {
+            this.rows = rows;
+            this.columns = columns;
+        }
+    }
+
+    // add to global namespace
+    window.gridSelector = gridSelector;
+
+})(window);
+var Grid = (function() {
+
+    function extend(a, b) {
+        for (var key in b) {
+            if (b.hasOwnProperty(key)) {
+                a[key] = b[key];
+            }
+        }
+        return a;
+    }
+
+    var config = {
+        items: Array.prototype.slice.call(document.querySelectorAll('#gt-grid > div')),
+        gridSel: new gridSelector(document.getElementById('gt-grid-selector'), {
+            onClick: function() {
+                initGrid();
+            }
+        })
+    },
+    defaults = {
+        transition: false,
+        speed: 300,
+        delay: 0
+    };
+
+    function init(options) {
+        config.options = extend(defaults, options);
+        initGrid();
+        if (config.options.transition) {
+            setTimeout(function() {
+                config.items.forEach(function(el, i) {
+                    el.style.WebkitTransition = 'all ' + config.options.speed + 'ms ' + (i * config.options.delay) + 'ms';
+                    el.style.MozTransition = 'all ' + config.options.speed + 'ms ' + (i * config.options.delay) + 'ms';
+                    el.style.transition = 'all ' + config.options.speed + 'ms ' + (i * config.options.delay) + 'ms';
+                });
+            }, 25);
+        }
+    }
+
+    function initGrid() {
+        var rows = config.gridSel.rows,
+                columns = config.gridSel.columns;
+
+        config.items.forEach(function(el, i) {
+            el.style.position = 'absolute';
+
+            var elpos = config.items.indexOf(el),
+                    current_row = Math.floor(elpos / config.gridSel.maxcolumns),
+                    current_column = elpos - current_row * config.gridSel.maxcolumns,
+                    width = 100 / columns,
+                    height = 100 / rows;
+
+            if (current_row < rows && current_column < columns) {
+                //if( Modernizr.csscalc ) {
+                //	el.style.width = '-webkit-calc(' + width + '% + 1px)';
+                //	el.style.height = '-webkit-calc(' + height + '% + 1px)';
+                //	el.style.width = '-moz-calc(' + width + '% + 1px)';
+                //	el.style.height = '-moz-calc(' + height + '% + 1px)';
+                //	el.style.width = 'calc(' + width + '% + 1px)';
+                //	el.style.height = 'calc(' + height + '% + 1px)';
+                //}
+                //else  {
+              // el.style.width = width + .5 + '%';
+                //el.style.height = height + .5 + '%';
+                 el.style.width = width + '%';
+                el.style.height = height + '%';
+              
+                //}
+
+                el.style.left = width * (current_column) + '%';
+                el.style.top = height * (current_row) + '%';
+
+                classie.remove(el, 'gt-hidden');
+                classie.add(el, 'gt-visible');
+            }
+            else {
+                classie.remove(el, 'gt-visible');
+                classie.add(el, 'gt-hidden');
+            }
+        });
+    }
+
+    return {init: init};
+
+})();
+
