@@ -1,6 +1,6 @@
 <%@include file="../static/header.jsp"%>
-<%@include file="../static/navbar.jsp"%>
-<script src="library/js/app-landing/vendor/custom.modernizr.js"></script>
+
+
 
 <body>
 	<header id="header">
