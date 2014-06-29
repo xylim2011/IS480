@@ -375,3 +375,8 @@ body {
 	-o-border-radius:3px;
 	-ms-border-radius:3px;
 }
+
+.navbar-custom li:last-child a:hover,
+.navbar-custom li:last-child:hover {
+	background: none;
+}

@@ -41,6 +41,7 @@ public class StudentDAO {
 					
 					while(rs.next()){
 						count = rs.getInt("counter");
+						
 						if(count == 0){//Student does not exist in database and needs to be inserted
 							//SQL statement for adding for student
 							String insertDb = "INSERT INTO STUDENT (StudentName,Email)";
@@ -49,14 +50,13 @@ public class StudentDAO {
 							statement = (Statement)(dbConn.createStatement());
 							statement.executeUpdate(insertDb);
 							
-							String retriveID = "SELECT last_insert_id() AS sID";
-							queryStatement = dbConn.prepareStatement(retriveID);
+							String retrieveID = "SELECT last_insert_id() AS sID";
+							queryStatement = dbConn.prepareStatement(retrieveID);
 							rs = queryStatement.executeQuery();
 							
 							JSONObject student = new JSONObject();
-							student.put("id",(Integer)rs.getInt("sID"));
-							
-							studentIDs.put(student);
+							//student.put("id",(Integer)rs.getInt("sID"));
+							//studentIDs.put(student);
 							
 						} else {//Student exists in database
 							String retriveID = "SELECT StudentID AS sID from STUDENT WHERE ";
@@ -65,9 +65,15 @@ public class StudentDAO {
 							rs = queryStatement.executeQuery();
 							
 							JSONObject student = new JSONObject();
-							student.put("id", (Integer)rs.getInt("sID"));
+							while (rs.next()) {
+								for (int j = 0; j < rs.getFetchSize(); j++) {
+									
+									System.out.println(rs.getString(j));
+								}
+							}
+							//student.put("id", (Integer)rs.getInt("sID"));
 							
-							studentIDs.put(student);
+							//studentIDs.put(student);
 						}
 							
 					}
