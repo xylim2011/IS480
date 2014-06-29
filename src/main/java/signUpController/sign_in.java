@@ -78,7 +78,7 @@ public class sign_in extends HttpServlet {
                 }
             } 
             else {
-               System.out.println("98");
+               
                 JSONObject userDetails = twitter.getTwitterAccessTokenFromAuthorizationCode(oauth_token, oauth_verifier);
                
                 //save the 4 attributes in database for user
@@ -87,7 +87,6 @@ public class sign_in extends HttpServlet {
                 String token = userDetails.getString("access_token");
                 String secret = userDetails.getString("access_token_secret");
                 JSONObject user_session = new JSONObject("{id:'" + user_id +"',username:'" + screen_name + "',token:'" + token + "',secret:'" + secret + "'}");
-                System.out.println("90 Token: " + token + " Secret: " + secret);
                 session.setAttribute("twitterUser",user_session);
                 response.addCookie(new Cookie("i",user_id));
                 response.sendRedirect("home");
