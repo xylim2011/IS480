@@ -78,7 +78,7 @@ public class sign_in extends HttpServlet {
                 }
             } 
             else {
-               
+               System.out.println("98");
                 JSONObject userDetails = twitter.getTwitterAccessTokenFromAuthorizationCode(oauth_token, oauth_verifier);
                
                 //save the 4 attributes in database for user

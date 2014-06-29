@@ -11,6 +11,10 @@ and open the template in the editor.
 body#home{
     background:url('../../images/bg/skyline-sg.jpg') !important;
 }
+.topic_menu{
+    color:#fff;
+    font-size:2em;
+}
 .topic{
     display:none;
 }
@@ -196,6 +200,7 @@ body#home{
 .side_navbar{
     position: fixed;
     height: 100%;
+    z-index: 1; 
     width: 230px;
     top: 0;
     border-right: 1px solid #BBB;
@@ -529,9 +534,9 @@ span.tweet-created{
 .gt-grid-select > div {
     width: 22px;
     height: 22px;
-    background: rgba(0,0,0,0.3);
+    background: rgba(255,255,255,0.3);
     float: left;
-    border: 1px solid rgba(0,0,0,0.3);
+    border: 1px solid rgba(255,255,255,0.3);
 }
 
 .no-touch .gt-grid-control:hover .gt-grid-icon,
@@ -571,4 +576,5 @@ span.tweet-created{
     position:fixed;
     width:100%;
     height:100%;
+    z-index: 2;
 }

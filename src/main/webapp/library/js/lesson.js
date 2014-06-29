@@ -74,6 +74,7 @@ function initWrapperActions() {
         updateInterval();
     })
     $('.player').click(function() {
+        event.stopPropagation();
         if ($(this).hasClass('glyphicon-play play')) {
             //handle play
             $(this).addClass('glyphicon-pause pause').removeClass('glyphicon-play play');
@@ -87,7 +88,7 @@ function initWrapperActions() {
 
         }
     })
-    $('.tweets-wrapper').click(function(){
+    $('.tweet_header').click(function(){
         $('#topic').fadeIn(500);
         var word = $(this).find($('.searchword')).text();
         loadTopic(word);
@@ -98,7 +99,7 @@ function initWrapperActions() {
 }
 
 function loadTopic(word){
-       $.get("getTweets", {keyword: keyword}, function(batch) {
+       $.get("getTweets", {keyword: word}, function(batch) {
            
        },"json");
 }
@@ -256,7 +257,7 @@ function loadNew() {
             }
         },
         _init: function() {
-            this.trigger = this.el.querySelector('span.gt-grid-icon');
+            this.trigger = this.el.querySelector('span.glyphicon-th');
             this.gridItems = Array.prototype.slice.call(this.el.querySelectorAll('div.gt-grid-select > div'));
             this._setRowsColumns(this.options.rows, this.options.columns);
             this.maxcolumns = this.options.maxcolumns;

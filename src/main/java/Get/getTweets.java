@@ -91,6 +91,7 @@ public class getTweets extends HttpServlet {
                 for (int i = 0; i < tweets.size(); i++) {
                     Status tweet = tweets.get(i);
                     JSONObject twit = new JSONObject(DataObjectFactory.getRawJSON(tweet));
+                    System.out.println(twit);
                     if (i == tweets.size() - 1) {
                         oldest_tweet = tweet.getId();
                     } else if (i == 0) {
@@ -100,6 +101,10 @@ public class getTweets extends HttpServlet {
                     statuses.put(twit);
                 }
                 //} while ((query = result.nextQuery()) != null);
+                //get STATUSES JSON ARRAY FROM HERE
+                //statuses =  TwitterDAO.categorizeweets(statuses);
+                
+                
                 batch.put("tweets", statuses);
                 batch.put("latest", latest_tweet);
                 batch.put("oldest", oldest_tweet);

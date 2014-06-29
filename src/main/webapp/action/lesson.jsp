@@ -22,7 +22,7 @@
     <!--end tweet wrappers-->
     <div class="container topic" id="topic">
         <div id="gt-grid-selector" class="gt-grid-control">
-            <span class="gt-grid-icon"></span>
+            <span class="glyphicon glyphicon-th topic_menu"></span>
             <div class="gt-grid-select">
                 <div></div><div></div><div></div><div></div><div></div>
                 <div></div><div></div><div></div><div></div><div></div>
