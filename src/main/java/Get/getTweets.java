@@ -23,6 +23,7 @@ import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
 import twitter4j.json.DataObjectFactory;
 import TwitterEndpoints.*;
+
 /**
  *
  * @author Sherman
@@ -49,13 +50,16 @@ public class getTweets extends HttpServlet {
 
             String load = null;
             String update = null;
+            String count = "25";
             if (request.getParameter("load") != null) {
                 load = (String) request.getParameter("load");
             }
             if (request.getParameter("update") != null) {
                 update = (String) request.getParameter("update");
             }
-
+            if (request.getParameter("count") != null) {
+                count = (String) request.getParameter("count");
+            }
             //set up keys locally
             ConfigurationBuilder cb = new ConfigurationBuilder();
             cb.setJSONStoreEnabled(true);
@@ -68,43 +72,41 @@ public class getTweets extends HttpServlet {
             TwitterFactory tf = new TwitterFactory(cb.build());
             Twitter twitter = tf.getInstance();
             JSONObject batch = new JSONObject();
-      
+
             try {
-               // Query query = new Query(searchItem + "+exclude:retweets");
-                 Query query = new Query(searchItem);
+                // Query query = new Query(searchItem + "+exclude:retweets");
+                Query query = new Query(searchItem);
                 long latest_tweet = 0;
                 long oldest_tweet = 0;
                 //query.setLang("en");
-                query.setCount(25);
+                query.setCount(Integer.parseInt(count));
                 query.setResultType(Query.RECENT);
                 if (load != null) {
                     query.setMaxId(Long.parseLong(load) - 1);
-                }else if(update != null){
+                } else if (update != null) {
                     query.setSinceId(Long.parseLong(update) + 1);
                 }
                 QueryResult result;
                 //do{
                 result = twitter.search(query);
                 List<Status> tweets = result.getTweets();
-               
+
                 JSONArray statuses = new JSONArray();
                 for (int i = 0; i < tweets.size(); i++) {
                     Status tweet = tweets.get(i);
                     JSONObject twit = new JSONObject(DataObjectFactory.getRawJSON(tweet));
-                    System.out.println(twit);
+                    
                     if (i == tweets.size() - 1) {
                         oldest_tweet = tweet.getId();
                     } else if (i == 0) {
                         latest_tweet = tweet.getId();
                     }
-                   
                     statuses.put(twit);
                 }
                 //} while ((query = result.nextQuery()) != null);
                 //get STATUSES JSON ARRAY FROM HERE
                 //statuses =  TwitterDAO.categorizeweets(statuses);
-                
-                
+
                 batch.put("tweets", statuses);
                 batch.put("latest", latest_tweet);
                 batch.put("oldest", oldest_tweet);

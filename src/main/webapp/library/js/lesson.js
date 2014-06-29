@@ -88,20 +88,34 @@ function initWrapperActions() {
 
         }
     })
-    $('.tweet_header').click(function(){
+    $('.tweet_header').click(function() {
         $('#topic').fadeIn(500);
         var word = $(this).find($('.searchword')).text();
-        loadTopic(word);
+        initFullPage(word);
     })
 
 
 
 }
+function initFullPage(word){
+    $('.gt-grid-select').unbind('click')
+    $('.gt-grid-select').click(function(){
+        loadTopic($('.gt-grid-selected').length,word)
 
-function loadTopic(word){
-       $.get("getTweets", {keyword: word}, function(batch) {
-           
-       },"json");
+    })
+}
+function loadTopic(count,word) {
+        
+        console.log(count + " : " + word)
+    $.get("getTweets", {keyword: word,count:count}, function(batch) {
+        var tweets = batch.tweets;
+        console.log(tweets);
+        console.log(tweets.length);
+        insertTweetsFP();
+    }, "json");
+}
+function insertTweetsFP(){
+    
 }
 function enableTwitterLink() {
     $('blockquote').click(function() {
@@ -131,11 +145,12 @@ function createTweetDisplay(tweets, wrapper, insertionPt, display) {
             if (word.charAt(0) == '#') {
                 word = '<span class="green bold">' + word + "</span>";
             }
+            if (word.match(/((?:https?\:\/\/|www\.)(?:[-a-z0-9]+\.)*[-a-z0-9]+.*)/i)) {
+                word = '<a href="' + word + '" target="_blank">' + word + '</a>';
+            }
             finalTweet += word + " ";
         })
-        if (tweet.entities.urls.length > 0) {
-            finalTweet.replace(tweet.entities.urls[0].url, "<a href='" + tweet.entities.urls[0].url + "' target='_blank'>" + tweet.entities.urls[0].display_url + '</a>')
-        }
+
         if (display == "show") {
             tc += '<blockquote id="' + id + '" class="twitter-tweet" lang="en">';
         } else {
@@ -147,10 +162,11 @@ function createTweetDisplay(tweets, wrapper, insertionPt, display) {
         tc += '<div class="tweetuser_username">' + tweet.user.screen_name + "</div>"
         tc += '</div>';
         tc += '<p>' + finalTweet;
-        tc += '</p>&mdash; ' + tweetOriginURL + tweet.user.name + '' + '</a><span class="tweet-created">' + date_created + '</span></blockquote>';
+        tc += '</p>&mdash; ' + tweetOriginURL + tweet.user.name + '' + '</a><span class="tweet-created">' + new Date().getTime(date_created) + '</span></blockquote>';
         count++;
 
     })
+    preventLinkProp();
     if (insertionPt == "append") {
         $(tc).appendTo(wrapper);
     } else if (insertionPt == "prepend") {
@@ -174,7 +190,12 @@ function update() {
         }
     })
 }
-
+function preventLinkProp() {
+    $('blockquote p a').click(function(event) {
+        event.stopPropagation();
+      
+    })
+}
 function loadNew() {
 
     $('.tweets-wrapper').each(function(index) {
@@ -400,11 +421,11 @@ var Grid = (function() {
                 //	el.style.height = 'calc(' + height + '% + 1px)';
                 //}
                 //else  {
-              // el.style.width = width + .5 + '%';
+                // el.style.width = width + .5 + '%';
                 //el.style.height = height + .5 + '%';
-                 el.style.width = width + '%';
+                el.style.width = width + '%';
                 el.style.height = height + '%';
-              
+
                 //}
 
                 el.style.left = width * (current_column) + '%';
