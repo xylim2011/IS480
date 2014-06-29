@@ -400,11 +400,7 @@ span.tweet-created{
     to   { opacity: 1; }
 }
 
-/* Internet Explorer */
-@-ms-keyframes fadein {
-    from { opacity: 0; }
-    to   { opacity: 1; }
-}​
+
 
 /**grid system88/
 /* Grid style; make sure parent containers have full height */
@@ -457,10 +453,10 @@ span.tweet-created{
     background-position: 45px 10px;
 }
 
-.gt-grid > div h1,
+//.gt-grid > div h1,
 .gt-grid > div h3 {
     position: absolute;
-    bottom: 0;
+    top: 0;
     left: 0;
     margin: 0;
     cursor: default;
@@ -470,21 +466,22 @@ span.tweet-created{
     padding: 0.5em;
     line-height: 0.9;
     font-weight: 300;
-    text-align: right;
+    bottom:0;
+    text-align: left;
 }
 
 .gt-grid > div h3 {
     font-size: 1.05em;
     padding: 1em;
     font-weight: 700;
-    text-transform: uppercase;
+    // text-transform: uppercase;
 }
 .gt-grid > div {
 
     color:#fff;
     padding: 1em;
     font-weight: 700;
-    text-transform: uppercase;
+    // text-transform: uppercase;
 }
 /* The little grid to control the number of items */
 .gt-grid-control {
@@ -557,10 +554,18 @@ span.tweet-created{
 .gt-grid-select .gt-grid-hover {
     box-shadow: inset 0 0 0 10px rgba(0, 120, 231, 0.44);
 }
-
+.close_full:hover{
+    color:red;
+}
+.close_full{
+    font-size: 2em;
+    cursor: pointer;
+    position: absolute;
+}
 /* Demo 2: Transition, no delays */
 .topic .gt-grid > div {
     background:rgba(0, 0, 0, 0.82);
+    border: 1px solid rgba(58, 58, 58, 0.76);
     -webkit-transform: scale(1);
     -moz-transform: scale(1);
     transform: scale(1);

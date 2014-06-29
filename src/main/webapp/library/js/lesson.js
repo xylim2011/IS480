@@ -99,9 +99,13 @@ function initWrapperActions() {
 }
 function initFullPage(word){
     $('.gt-grid-select').unbind('click')
+    loadTopic(25,word)
     $('.gt-grid-select').click(function(){
         loadTopic($('.gt-grid-selected').length,word)
 
+    })
+    $('.close_full').click(function(){
+        $('#topic').fadeOut(500);
     })
 }
 function loadTopic(count,word) {
@@ -109,14 +113,14 @@ function loadTopic(count,word) {
         console.log(count + " : " + word)
     $.get("getTweets", {keyword: word,count:count}, function(batch) {
         var tweets = batch.tweets;
-        console.log(tweets);
-        console.log(tweets.length);
-        insertTweetsFP();
+        
+       for(var i=0;i<tweets.length;i++){
+           var wrapper = $('div h3')[i];
+           $('#gt-grid').find(wrapper).text(tweets[i].text)
+       }
     }, "json");
 }
-function insertTweetsFP(){
-    
-}
+
 function enableTwitterLink() {
     $('blockquote').click(function() {
         window.open(this.id, '_blank')
