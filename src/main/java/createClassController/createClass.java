@@ -74,10 +74,24 @@ public class createClass extends HttpServlet {
         String fileName = request.getParameter("fileName");
         
         int courseID = getCourseID(CourseCode,CourseName);
-        int termID = getTermID(TermName);
+        boolean status = false;
+        if(courseID < 0){
+        	JSONObject details = new JSONObject();
+        	details.put("crsCode", CourseCode);
+        	details.put("crsName", CourseName);
+			status = addCourse(details);
+			if(status){
+				courseID = getCourseID(CourseCode,CourseName);
+			} else {
+				System.out.println ("86 Course not added");
+			}
+        }
+        
+    	int termID = getTermID(TermName);
         int sectionID = getSectionID(SectionName);
         
-        JSONArray StudentAdded = studentsAdded(fileName);
+        JSONArray StudentAdded = studentsAdded("C:/Users/chusung/Desktop/Studentlist.csv");
+        System.out.println(StudentAdded.length());
         
         JSONObject classDetails = new JSONObject();
         classDetails.put("CourseID", courseID);
@@ -86,7 +100,7 @@ public class createClass extends HttpServlet {
         classDetails.put("UserID", uID);
         classDetails.put("StartTime", start);
         classDetails.put("EndTime", end);
-        
+                
         JSONArray enrolled = new JSONArray();
         for(int i=0; i<StudentAdded.length();i++){
         	String extract = StudentAdded.getString(i);
@@ -185,6 +199,7 @@ public class createClass extends HttpServlet {
 				 }
 			 }
         }
+        System.out.println(studentList.length());
         return studentIDs; //JSONArray of all student IDs only
     }
     
@@ -213,10 +228,22 @@ public class createClass extends HttpServlet {
     	return status;
     }
     
+    private boolean addCourse(JSONObject details){
+    	boolean toReturn = false;
+    	try{
+    		toReturn = CourseDAO.addCourse(details);
+    	} catch (Exception e){
+    		e.printStackTrace();
+    	}
+    	return toReturn;
+    }
+    
+    
+    
     private int getCourseID(String courseCode, String courseName){
     	if(courseName != null){
     		try{
-    			return ClassDAO.getCourseID(courseCode,courseName);
+    			return CourseDAO.getCourseID(courseCode,courseName);
     		} catch (Exception e){
     			e.printStackTrace();
     		}
