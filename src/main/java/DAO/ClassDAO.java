@@ -9,9 +9,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.mysql.jdbc.Statement;
 import com.util.ConnectionManager;
 
 public class ClassDAO {
+
+/*____________________________________________________________________________________________________*/
+/*
+ * @param	This method is to get classes associated to a specific admin user's id
+ */	
 	
 	public static JSONArray getClassTaught(String id) throws JSONException, SQLException{
 		JSONObject classTaught = null;
@@ -44,25 +50,34 @@ public class ClassDAO {
 		}
 		return classes;		
 	}
+/*____________________________________________________________________________________________________*/
+/*
+ * @param	This method is to add classes into the database
+ */	
 	
 	public static boolean addClass(JSONObject classDetails) throws SQLException, JSONException{
 		Connection dbConn = null;
-		PreparedStatement statement = null;
+		Statement statement = null;
 		ResultSet rs = null;		
 		boolean status = false;
 		try{
 			dbConn = ConnectionManager.getConnection();
 			if(classDetails != null){
-				String id = classDetails.getString("id");
-				int termId = classDetails.getInt("termId");
-				String grpId = classDetails.getString("grpId");
-				String crsName = classDetails.getString("crsName");
+				int id = classDetails.getInt("CourseID");
+				int termId = classDetails.getInt("TermID");
+				int sectionId = classDetails.getInt("SectionID");
+				long userId = classDetails.getLong("UserID");
+				String start = classDetails.getString("StartTime");
+				String end = classDetails.getString("EndTime");
 				
-				String queryDb = "INSERT INTO CLASS (CourseID,CourseName,TermID,GroupId)";
-				queryDb += " VALUES (" + id + "," + crsName + "," + termId + "," + grpId + ");";
+				String insertDb = "INSERT INTO CLASS (CourseID,TermID,SectionID,UserID,StartTime,EndTime)";
+				insertDb += " VALUES (" + id + "," + termId + "," + sectionId + "," + userId + ",'" + start + "','" + end + "');";
 				
-				statement = dbConn.prepareStatement(queryDb);
-				rs = statement.executeQuery();
+				statement = (Statement)(dbConn.createStatement());
+				statement.executeUpdate(insertDb);
+				
+				//Indicate addition of the class into database is successful
+				status = true;
 			}
 		} catch (Exception e){
 			e.printStackTrace();
@@ -72,61 +87,5 @@ public class ClassDAO {
 		}
 		return status;
 	}
-	
-	public static int getTermID(String termName){
-		Connection dbConn = null;
-		PreparedStatement statement = null;
-		ResultSet rs = null;		
-		int toReturn = -1;
-		try{
-			dbConn = ConnectionManager.getConnection();
-			if(termName != null){
-		
-				String queryDb = "SELECT TermID FROM term WHERE ";
-				queryDb += " TermName='" + termName + "';";
-
-				statement = dbConn.prepareStatement(queryDb);
-				rs = statement.executeQuery();
-				
-				while(rs.next()){
-					toReturn = rs.getInt("TermID");
-				}
-			}
-		} catch (Exception e){
-			e.printStackTrace();
-		}		
-		finally{
-			ConnectionManager.close(dbConn, statement, rs);
-		}
-		return toReturn;
-	}
-	
-	public static int getSectionID(String sectionName){
-		Connection dbConn = null;
-		PreparedStatement statement = null;
-		ResultSet rs = null;		
-		int toReturn = -1;
-		try{
-			dbConn = ConnectionManager.getConnection();
-			if(sectionName != null){
-		
-				String queryDb = "SELECT SectionID FROM section WHERE ";
-				queryDb += " SetionName='" + sectionName + "';";
-
-				statement = dbConn.prepareStatement(queryDb);
-				rs = statement.executeQuery();
-				
-				while(rs.next()){
-					toReturn = rs.getInt("SectionID");
-				}
-			}
-		} catch (Exception e){
-			e.printStackTrace();
-		}		
-		finally{
-			ConnectionManager.close(dbConn, statement, rs);
-		}
-		return toReturn;
-	}
-	
+/*____________________________________________________________________________________________________*/
 }

@@ -12,11 +12,13 @@ import org.json.JSONObject;
 import com.mysql.jdbc.Statement;
 import com.util.ConnectionManager;
 
-import java.util.UUID;
-
 public class StudentDAO {
 	
-	//To add student list into DB from createClassController
+/*____________________________________________________________________________________________________*/
+/*
+ * @param	This method is to add the students into database based on the csv file uploaded by user 
+ */	
+	
 	public static JSONArray addStudent(JSONArray students) throws SQLException, JSONException{
 		Connection dbConn = null;
 		Statement statement = null;
@@ -32,6 +34,7 @@ public class StudentDAO {
 					JSONObject extract = students.getJSONObject(i);
 					String name = extract.getString("name");
 					String email = extract.getString("email");
+					String uuid = extract.getString("uuid");
 					
 					String checkDb = "SELECT COUNT(Email) AS counter from STUDENT WHERE ";
 					checkDb += "Email='" + email + "';";
@@ -40,12 +43,13 @@ public class StudentDAO {
 					rs = queryStatement.executeQuery();
 					
 					while(rs.next()){
+						
 						count = rs.getInt("counter");
 						
 						if(count == 0){//Student does not exist in database and needs to be inserted
 							//SQL statement for adding for student
-							String insertDb = "INSERT INTO STUDENT (StudentName,Email)";
-							insertDb += " VALUES ('" + name + "','" + email + "');";
+							String insertDb = "INSERT INTO STUDENT (StudentName,Email,UUID)";
+							insertDb += " VALUES ('" + name + "','" + email + "','" + uuid +"');";
 							
 							statement = (Statement)(dbConn.createStatement());
 							statement.executeUpdate(insertDb);
@@ -59,9 +63,9 @@ public class StudentDAO {
 							//studentIDs.put(student);
 							
 						} else {//Student exists in database
-							String retriveID = "SELECT StudentID AS sID from STUDENT WHERE ";
-							retriveID += "Email='" + email + "';"; 
-							queryStatement = dbConn.prepareStatement(retriveID);
+							String retrieveID = "SELECT StudentID AS sID from STUDENT WHERE ";
+							retrieveID += "Email='" + email + "';"; 
+							queryStatement = dbConn.prepareStatement(retrieveID);
 							rs = queryStatement.executeQuery();
 							
 							JSONObject student = new JSONObject();
@@ -77,8 +81,6 @@ public class StudentDAO {
 						}
 							
 					}
-					
-					
 				}
 			}
 		} catch (Exception e){
@@ -90,8 +92,13 @@ public class StudentDAO {
 		return studentIDs;
 	}
 	
-	//To return the number of students whom successfully provided their twitter username to the system
-	public static int numberOfStudents(String crsId, String termId, int grpId){
+/*____________________________________________________________________________________________________*/
+/*
+ * @param	This method is to get the number of students from a specific class based on the following:
+ * 			CourseID, TermID, GroupID from a JSONObject details
+ */	
+	
+	public static int numberOfStudents(JSONObject details){
 		Connection dbConn = null;
 		PreparedStatement statement = null;
 		ResultSet rs = null;
@@ -99,16 +106,17 @@ public class StudentDAO {
 		
 		try{
 			dbConn = ConnectionManager.getConnection();
-			if(crsId != null && termId != null && grpId > 0){
-				String queryDb = "SELECT COUNT(*) from ENROLLED";
-				queryDb += " WHERE CourseId=" + crsId;
-				queryDb += " AND TermId=" + termId;
-				queryDb += " AND GroupId=" + grpId;
+			if(details != null){
+				String queryDb = "SELECT COUNT(*) AS studentsNum from ENROLLED";
+				queryDb += " WHERE CourseId=" + details.getInt("CourseID");
+				queryDb += " AND TermId=" + details.getInt("TermID");
+				queryDb += " AND GroupId=" + details.getInt("GroupID");
 				queryDb += ";"; 
 						
 				statement = dbConn.prepareStatement(queryDb);
 				rs = statement.executeQuery();
 			}
+			toReturn = rs.getInt("studentsNum");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

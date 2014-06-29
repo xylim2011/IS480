@@ -7,8 +7,44 @@
 <title>Create a new class</title>
 </head>
 <body>
-	<p>Show .xls, .xlsx, .csv files...</p>
-	<input type="file" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" 
-		ID="fileSelect" runat="server" /> 
+	<form name="CreateClass" action="create_class">
+		<fieldset>
+			<legend>Create A New Class</legend>
+			<fieldset>
+	   			<label>Course Code: </label>
+				<input class="input-xlarge" type="text" placeholder="IS425" name="CourseCode" />
+				<br><br>
+				<label>Course Name: </label>
+				<input class="input-xlarge" type="text" placeholder="AISM" name="CourseName" />
+				<br><br>
+				<label>Term: </label>
+				<input class="input-xlarge" type="text" placeholder="1" name="TermName" />
+				<br><br>
+				<label>Section/Class:</label>
+				<input class="input-xlarge" type="text" placeholder="G1" name="SectionName" />
+	  		</fieldset>
+	  		 		
+	  		<fieldset>
+	  			<label> Start Date: </label>
+	  			<input class="input-large" type="text" placeholder="dd/mm/yyyy" name="startDate"><br>
+	  			<br>
+	  			<label> Start Time: </label>
+	  			<input class="input-large" type="text" placeholder="HH:mm" name="startTime"><br>
+	  			<br>
+	  			<label> End Date: </label>
+	  			<input class="input-large" type="text" placeholder="dd/mm/yyyy" name="endDate"><br>
+	  			<br>
+	  			<label> End Time: </label>
+	  			<input class="input-large" type="text" placeholder="HH:mm" name="endTime"><br>
+	  		</fieldset>
+	
+			<fieldset>
+				<label>Select a csv file to upload</label>
+				<br>
+				<input type="file" accept=".csv" ID="fileSelect" runat="server" />
+			</fieldset>
+		</fieldset>
+		<button type="submit">Submit</button>
+	</form> 
 </body>
 </html>

@@ -52,6 +52,7 @@ public class createClass extends HttpServlet {
         String classStart = startDate + " " + startTime;
         
         Calendar cal_start = Calendar.getInstance();
+        
         try{
         	cal_start.setTime(sdf.parse(classStart));
         } catch (Exception e){
@@ -63,7 +64,9 @@ public class createClass extends HttpServlet {
         String endDate = request.getParameter("endDate");
         String endTime = request.getParameter("endTime");
         String classEnd = endDate + " " + endTime;
+        
         Calendar cal_end = Calendar.getInstance();
+        
         try{
         	cal_end.setTime(sdf.parse(classEnd));
         } catch (Exception e){
@@ -73,26 +76,93 @@ public class createClass extends HttpServlet {
         
         String fileName = request.getParameter("fileName");
         
-        int courseID = getCourseID(CourseCode,CourseName);
-        boolean status = false;
-        if(courseID < 0){
-        	JSONObject details = new JSONObject();
-        	details.put("crsCode", CourseCode);
-        	details.put("crsName", CourseName);
-			status = addCourse(details);
-			if(status){
-				courseID = getCourseID(CourseCode,CourseName);
+/*____________________________________________________________________________________________________*/
+        
+/*
+ * @param 	This section is for checking of the course details after retrieving the user's input
+ * 			Two main methods are used - getCourseID and addCourse
+ */
+        
+        //To create the JSONObject of the course details with the course code and course name
+        JSONObject courseDetails = new JSONObject();
+        courseDetails.put("CourseCode", CourseCode);
+    	courseDetails.put("CourseName", CourseName);
+    	
+    	//To check whether course exists in database
+    	int courseID = getCourseID(courseDetails);
+        //If course does not exist, a value of -1 will be received here and the course will be added
+        if(courseID < 0){        	
+			boolean status_course = addCourse(courseDetails);
+			//To retrieve the courseID after adding the course into database
+			if(status_course){
+				courseID = getCourseID(courseDetails);
 			} else {
-				System.out.println ("86 Course not added");
+				System.out.println ("100 Course not added");
 			}
         }
+/*____________________________________________________________________________________________________*/
         
-    	int termID = getTermID(TermName);
-        int sectionID = getSectionID(SectionName);
+/*
+ * @param 	This section is for checking of the term details after retrieving the user's input
+ * 			Two main methods are used - getTermID and addTerm
+ */
         
-        JSONArray StudentAdded = studentsAdded("C:/Users/chusung/Desktop/Studentlist.csv");
-        System.out.println(StudentAdded.length());
+        //To create JSONObject of the term details with the term name
+    	JSONObject termDetails = new JSONObject();
+    	termDetails.put("TermName", TermName);
         
+    	//To check whether term exists in database
+    	int termID = getTermID(termDetails);
+    	//If term does not exist, a value of -1 will be received here and the term will be added
+        if(termID < 0){
+			boolean status_term = addTerm(termDetails);
+			//To retrieve the TermID after adding the course into database
+			if(status_term){
+				termID = getTermID(termDetails);
+			} else {
+				System.out.println ("123 Term not added");
+			}
+        }
+/*____________________________________________________________________________________________________*/
+
+/*
+ * @param 	This section is for checking of the section details after retrieving the user's input
+ * 			Two main methods are used - getSectionID and addSection
+ */
+    	
+        //To create JSONObject of the section details with the section name
+    	JSONObject sectionDetails = new JSONObject();
+    	sectionDetails.put("SectionName", SectionName);
+        
+    	//To check whether section exists in database
+    	int sectionID = getSectionID(sectionDetails);
+    	//If section does not exist, a value of -1 will be received here and the section will be added
+        if(sectionID < 0){
+        	boolean status_section = addSection(sectionDetails);
+        	//To retrieve the SectionID after adding the course into database
+        	if(status_section){
+        		sectionID = getSectionID(sectionDetails);
+        	} else {
+        		System.out.println ("146 Section not added");
+        	}
+        }
+        
+/*____________________________________________________________________________________________________*/
+        
+/*
+ * @param 	This section is for adding of students after user uploaded the csv file
+ * 			The method used to add student into the database is addStudents
+ */
+        
+        JSONArray studentIdList = addStudents("C:/Users/chusung/Desktop/Studentlist.csv");
+/*____________________________________________________________________________________________________*/
+        
+/*
+ * @param 	This section is for adding of class into the database
+ * 			The method used to add student into the database is addClass
+ */
+        
+        //To create JSONObject of the class details
         JSONObject classDetails = new JSONObject();
         classDetails.put("CourseID", courseID);
         classDetails.put("TermID", termID);
@@ -100,10 +170,23 @@ public class createClass extends HttpServlet {
         classDetails.put("UserID", uID);
         classDetails.put("StartTime", start);
         classDetails.put("EndTime", end);
-                
+        
+        boolean status_class = addClass(classDetails);
+        if(status_class){
+        	System.out.println("176 Class added successfully!");
+        } else {
+        	System.out.println("178 Class was not added!");
+        }
+/*____________________________________________________________________________________________________*/
+
+/*
+ * @param 	This section is for adding of enrolled into the database
+ * 			The method used to add enrolled into the database is addEnrolled
+ */
+        
         JSONArray enrolled = new JSONArray();
-        for(int i=0; i<StudentAdded.length();i++){
-        	String extract = StudentAdded.getString(i);
+        for(int i=0; i<studentIdList.length();i++){
+        	String extract = studentIdList.getString(i);
         	int id = Integer.parseInt(extract);
         	JSONObject info = new JSONObject();
         	info.put("StudentID", id);
@@ -115,30 +198,17 @@ public class createClass extends HttpServlet {
         	
         	enrolled.put(info);
         }
-		
-        boolean checkEnrolledAdded = enrolledAdded(enrolled);
-        //boolean checkClassAdded = classAdded(classDetails);
-		/*
-        if(checkStudentAdded){
-        	//int num = StudentDAO.numberOfStudents(classId,termId,grpId);
-			out.print("Students were added successfully!");
-		} else {
-			out.println("Students were NOT added!");
-		}
-        if(checkClassAdded){
-        	out.println("Class was added successfully!");
-        } else {
-        	out.println("Class was NOT added successfully!");
-        }
-        */
         
-        /* For future use
-        if(classAdded && studentAdded){
-        	response.sendRedirect("home");
+        boolean status_enrolled = addEnrolled(enrolled);
+        if(status_enrolled){
+        	System.out.println("204 Enrolled added successfully!");
+        } else {
+        	System.out.println("206 Enrolled was not added!");
         }
-        */
+/*____________________________________________________________________________________________________*/
 	}
-			
+
+	
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
@@ -164,15 +234,19 @@ public class createClass extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-    
-    private JSONArray studentsAdded(String fileName){
+   
+/*____________________________________________________________________________________________________*/
+
+/*
+ * @param 	This method is for adding of students into the database via StudentDAO
+ */
+    private JSONArray addStudents(String fileName){
     	String csvFile = fileName;   
 		BufferedReader br = null;
 		String line = "";
         String csvSplitBy = ",";
         JSONArray studentList = new JSONArray();
         JSONArray studentIDs = new JSONArray();
-        boolean status = false;
         
         if(fileName != null){
 	        try {
@@ -183,6 +257,7 @@ public class createClass extends HttpServlet {
 	        		JSONObject studentDetails = new JSONObject();
 	        		studentDetails.put("name",student[1]); 
 	        		studentDetails.put("email",student[2]);
+	        		studentDetails.put("uuid", uuid);
 	        		studentList.put(studentDetails);
 	        	}
 	        	//Calling the StudentDAO to add the students into database
@@ -199,11 +274,14 @@ public class createClass extends HttpServlet {
 				 }
 			 }
         }
-        System.out.println(studentList.length());
         return studentIDs; //JSONArray of all student IDs only
     }
-    
-    private boolean classAdded(JSONObject classDetails){
+/*____________________________________________________________________________________________________*/
+
+/*
+ * @param 	This method is for adding of classes into the database via ClassDAO		
+ */
+    private boolean addClass(JSONObject classDetails){
     	boolean status = false;
     	if(classDetails != null){
 	    	try {
@@ -214,8 +292,12 @@ public class createClass extends HttpServlet {
     	}
     	return status;
     }
-    
-    private boolean enrolledAdded(JSONArray enrolled){
+/*____________________________________________________________________________________________________*/
+
+/*
+ * @param 	This method is for adding of enrolled into the database via EnrolledDAO		
+ */
+    private boolean addEnrolled(JSONArray enrolled){
     	boolean status = false;
     	if(enrolled != null){
     		try{
@@ -227,7 +309,11 @@ public class createClass extends HttpServlet {
     	}
     	return status;
     }
-    
+/*____________________________________________________________________________________________________*/
+
+/*
+ * @param 	This method is for adding of classes into the database via ClassDAO		
+ */
     private boolean addCourse(JSONObject details){
     	boolean toReturn = false;
     	try{
@@ -237,39 +323,84 @@ public class createClass extends HttpServlet {
     	}
     	return toReturn;
     }
-    
-    
-    
-    private int getCourseID(String courseCode, String courseName){
-    	if(courseName != null){
+/*____________________________________________________________________________________________________*/
+
+/*
+ * @param 	This method is for getting specific course ID from the database via CourseDAO
+ */		
+    private int getCourseID(JSONObject details){
+    	if(details != null){
     		try{
-    			return CourseDAO.getCourseID(courseCode,courseName);
+    			return CourseDAO.getCourseID(details);
     		} catch (Exception e){
     			e.printStackTrace();
     		}
     	}
 		return -1;
-    }
+    }    
+/*____________________________________________________________________________________________________*/  
     
-    private int getTermID(String termName){
-    	if(termName != null){
+/*
+ * @param 	This method is for adding of terms into the database via TermDAO
+ */		
+    private boolean addTerm(JSONObject details){
+    	boolean toReturn = false;
+    	if(details != null){
     		try{
-    			return ClassDAO.getTermID(termName);
+    			toReturn = TermDAO.addTerm(details);
+    		} catch (Exception e) {
+    			e.printStackTrace();
+    		}
+    	}
+    	return toReturn;
+    }
+/*____________________________________________________________________________________________________*/  
+    
+/*
+ * @param 	This method is for getting specific term ID from the database via TermDAO
+ */	    
+    private int getTermID(JSONObject details){
+    	if(details != null){
+    		try{
+    			return TermDAO.getTermID(details);
     		} catch (Exception e){
     			e.printStackTrace();
     		}
     	}
     	return -1;
     }
+/*____________________________________________________________________________________________________*/ 
+
+/*
+ * @param 	This method is for getting specific section ID from the database via SectionDAO
+ */	
     
-    private int getSectionID(String sectionName){
-    	if(sectionName != null){
+    private int getSectionID(JSONObject details){
+    	if(details != null){
     		try{
-    			return ClassDAO.getSectionID(sectionName);
+    			return SectionDAO.getSectionID(details);
     		} catch (Exception e){
     			e.printStackTrace();
     		}
     	}
     	return -1;
     }
+/*____________________________________________________________________________________________________*/ 
+    
+/*
+ * @param 	This method is for adding of sections into the database via SectionDAO
+ */	
+    
+    private boolean addSection(JSONObject details){
+    	boolean toReturn = false;
+    	if(details != null){
+    		try{
+    			toReturn = SectionDAO.addSection(details);
+    		} catch (Exception e) {
+    			e.printStackTrace();
+    		}
+    	}
+    	return toReturn;
+    }
+/*____________________________________________________________________________________________________*/ 
 }
