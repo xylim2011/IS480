@@ -87,6 +87,7 @@ public class sign_in extends HttpServlet {
                 String token = userDetails.getString("access_token");
                 String secret = userDetails.getString("access_token_secret");
                 JSONObject user_session = new JSONObject("{id:'" + user_id +"',username:'" + screen_name + "',token:'" + token + "',secret:'" + secret + "'}");
+                System.out.println("90 Token: " + token + " Secret: " + secret);
                 session.setAttribute("twitterUser",user_session);
                 response.addCookie(new Cookie("i",user_id));
                 response.sendRedirect("home");
