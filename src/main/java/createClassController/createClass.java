@@ -5,6 +5,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.UUID;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -27,31 +31,83 @@ public class createClass extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException, JSONException {
+			throws ServletException, IOException, JSONException{
 		
 		response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         HttpSession session = request.getSession(true);
-        String userId = (String) ((JSONObject) session.getAttribute("twitterUser")).getString("id");
+        String userId = ((JSONObject) session.getAttribute("twitterUser")).getString("id");
+        long uID = Long.parseLong(userId);
+        
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY HH:mm");
         
         //Data from the createClass.jsp
-        String classId = request.getParameter("classId");
-        String termId = request.getParameter("termId");
-        String form_id = request.getParameter("grpId");
-        int grpId = Integer.parseInt(form_id);
-        String crsName = request.getParameter("crsName");
+        String CourseCode = request.getParameter("CourseCode");
+        String TermName = request.getParameter("TermName");
+        String SectionName = request.getParameter("SectionName");
+        String CourseName = request.getParameter("CourseName");
+        
+        String startDate = request.getParameter("startDate");
+        String startTime = request.getParameter("startTime");
+        String classStart = startDate + " " + startTime;
+        
+        Calendar cal_start = Calendar.getInstance();
+        try{
+        	cal_start.setTime(sdf.parse(classStart));
+        } catch (Exception e){
+        	e.printStackTrace();
+        }
+        
+        long start = cal_start.getTimeInMillis();
+        
+        String endDate = request.getParameter("endDate");
+        String endTime = request.getParameter("endTime");
+        String classEnd = endDate + " " + endTime;
+        Calendar cal_end = Calendar.getInstance();
+        try{
+        	cal_end.setTime(sdf.parse(classEnd));
+        } catch (Exception e){
+        	e.printStackTrace();
+        }
+        long end = cal_end.getTimeInMillis();
+        
         String fileName = request.getParameter("fileName");
         
-        JSONObject classDetails = 
-        		new JSONObject("{id:'" + classId + "',termId:'" + termId + "',grpId:'" + grpId + "',crsName:" + crsName);
+        int courseID = getCourseID(CourseCode,CourseName);
+        int termID = getTermID(TermName);
+        int sectionID = getSectionID(SectionName);
         
+        JSONArray StudentAdded = studentsAdded(fileName);
         
-        boolean checkStudentAdded = studentsAdded(fileName);
-		boolean checkClassAdded = classAdded(classDetails);
-		        
+        JSONObject classDetails = new JSONObject();
+        classDetails.put("CourseID", courseID);
+        classDetails.put("TermID", termID);
+        classDetails.put("SectionID", sectionID);
+        classDetails.put("UserID", uID);
+        classDetails.put("StartTime", start);
+        classDetails.put("EndTime", end);
+        
+        JSONArray enrolled = new JSONArray();
+        for(int i=0; i<StudentAdded.length();i++){
+        	String extract = StudentAdded.getString(i);
+        	int id = Integer.parseInt(extract);
+        	JSONObject info = new JSONObject();
+        	info.put("StudentID", id);
+        	info.put("CourseID", courseID);
+        	info.put("TermID", termID);
+        	info.put("SectionID", sectionID);
+        	UUID uuid = UUID.randomUUID();
+        	info.put("UUID", uuid.toString());
+        	
+        	enrolled.put(info);
+        }
+		
+        boolean checkEnrolledAdded = enrolledAdded(enrolled);
+        //boolean checkClassAdded = classAdded(classDetails);
+		/*
         if(checkStudentAdded){
-        	int num = StudentDAO.numberOfStudents(classId,termId,grpId);
-			out.print(num + " students were added successfully!");
+        	//int num = StudentDAO.numberOfStudents(classId,termId,grpId);
+			out.print("Students were added successfully!");
 		} else {
 			out.println("Students were NOT added!");
 		}
@@ -60,6 +116,7 @@ public class createClass extends HttpServlet {
         } else {
         	out.println("Class was NOT added successfully!");
         }
+        */
         
         /* For future use
         if(classAdded && studentAdded){
@@ -94,25 +151,28 @@ public class createClass extends HttpServlet {
         return "Short description";
     }// </editor-fold>
     
-    private boolean studentsAdded(String fileName){
+    private JSONArray studentsAdded(String fileName){
     	String csvFile = fileName;   
 		BufferedReader br = null;
 		String line = "";
         String csvSplitBy = ",";
         JSONArray studentList = new JSONArray();
+        JSONArray studentIDs = new JSONArray();
         boolean status = false;
         
         if(fileName != null){
 	        try {
 	        	br = new BufferedReader (new FileReader(csvFile));
 	        	while ((line = br.readLine()) != null){
+	        		String uuid = UUID.randomUUID().toString();
 	        		String[] student =  line.split(csvSplitBy);
 	        		JSONObject studentDetails = new JSONObject();
 	        		studentDetails.put("name",student[1]); 
 	        		studentDetails.put("email",student[2]);
 	        		studentList.put(studentDetails);
 	        	}
-	        	status = StudentDAO.addStudent(studentList);
+	        	//Calling the StudentDAO to add the students into database
+	        	studentIDs = StudentDAO.addStudent(studentList);
 			 } catch (Exception e){
 				 e.printStackTrace();
 			 } finally {
@@ -125,7 +185,7 @@ public class createClass extends HttpServlet {
 				 }
 			 }
         }
-        return status;
+        return studentIDs; //JSONArray of all student IDs only
     }
     
     private boolean classAdded(JSONObject classDetails){
@@ -138,5 +198,51 @@ public class createClass extends HttpServlet {
 			}
     	}
     	return status;
+    }
+    
+    private boolean enrolledAdded(JSONArray enrolled){
+    	boolean status = false;
+    	if(enrolled != null){
+    		try{
+    			status = EnrolledDAO.addEnrolled(enrolled);
+    		} catch (Exception e){
+    			e.printStackTrace();
+    		}
+    		
+    	}
+    	return status;
+    }
+    
+    private int getCourseID(String courseCode, String courseName){
+    	if(courseName != null){
+    		try{
+    			return ClassDAO.getCourseID(courseCode,courseName);
+    		} catch (Exception e){
+    			e.printStackTrace();
+    		}
+    	}
+		return -1;
+    }
+    
+    private int getTermID(String termName){
+    	if(termName != null){
+    		try{
+    			return ClassDAO.getTermID(termName);
+    		} catch (Exception e){
+    			e.printStackTrace();
+    		}
+    	}
+    	return -1;
+    }
+    
+    private int getSectionID(String sectionName){
+    	if(sectionName != null){
+    		try{
+    			return ClassDAO.getSectionID(sectionName);
+    		} catch (Exception e){
+    			e.printStackTrace();
+    		}
+    	}
+    	return -1;
     }
 }

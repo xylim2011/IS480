@@ -73,4 +73,89 @@ public class ClassDAO {
 		return status;
 	}
 	
+	public static int getCourseID(String courseCode,String courseName){
+		Connection dbConn = null;
+		PreparedStatement statement = null;
+		ResultSet rs = null;		
+		int toReturn = -1;
+		try{
+			dbConn = ConnectionManager.getConnection();
+			if(courseCode != null && courseName != null){
+		
+				String queryDb = "SELECT CourseID FROM course WHERE ";
+				queryDb += " CourseCode='" + courseCode + " AND ";
+				queryDb += " CourseName='" + courseName +"';";
+				
+				statement = dbConn.prepareStatement(queryDb);
+				rs = statement.executeQuery();
+				
+				while(rs.next()){
+					toReturn = rs.getInt("CourseID");
+				}
+			}
+		} catch (Exception e){
+			e.printStackTrace();
+		}		
+		finally{
+			ConnectionManager.close(dbConn, statement, rs);
+		}
+		return toReturn;
+	}
+	
+	public static int getTermID(String termName){
+		Connection dbConn = null;
+		PreparedStatement statement = null;
+		ResultSet rs = null;		
+		int toReturn = -1;
+		try{
+			dbConn = ConnectionManager.getConnection();
+			if(termName != null){
+		
+				String queryDb = "SELECT TermID FROM term WHERE ";
+				queryDb += " TermName='" + termName + "';";
+
+				statement = dbConn.prepareStatement(queryDb);
+				rs = statement.executeQuery();
+				
+				while(rs.next()){
+					toReturn = rs.getInt("TermID");
+				}
+			}
+		} catch (Exception e){
+			e.printStackTrace();
+		}		
+		finally{
+			ConnectionManager.close(dbConn, statement, rs);
+		}
+		return toReturn;
+	}
+	
+	public static int getSectionID(String sectionName){
+		Connection dbConn = null;
+		PreparedStatement statement = null;
+		ResultSet rs = null;		
+		int toReturn = -1;
+		try{
+			dbConn = ConnectionManager.getConnection();
+			if(sectionName != null){
+		
+				String queryDb = "SELECT SectionID FROM section WHERE ";
+				queryDb += " SetionName='" + sectionName + "';";
+
+				statement = dbConn.prepareStatement(queryDb);
+				rs = statement.executeQuery();
+				
+				while(rs.next()){
+					toReturn = rs.getInt("SectionID");
+				}
+			}
+		} catch (Exception e){
+			e.printStackTrace();
+		}		
+		finally{
+			ConnectionManager.close(dbConn, statement, rs);
+		}
+		return toReturn;
+	}
+	
 }
