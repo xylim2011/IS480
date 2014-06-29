@@ -12,6 +12,7 @@ import org.json.JSONObject;
 import com.util.ConnectionManager;
 
 public class ClassDAO {
+	
 	public static JSONArray getClassTaught(String id) throws JSONException, SQLException{
 		JSONObject classTaught = null;
 		JSONArray classes = new JSONArray();
@@ -41,7 +42,35 @@ public class ClassDAO {
 		finally{
 			ConnectionManager.close(dbConn, statement, rs);
 		}
-		return classes;
-		
+		return classes;		
 	}
+	
+	public static boolean addClass(JSONObject classDetails) throws SQLException, JSONException{
+		Connection dbConn = null;
+		PreparedStatement statement = null;
+		ResultSet rs = null;		
+		boolean status = false;
+		try{
+			dbConn = ConnectionManager.getConnection();
+			if(classDetails != null){
+				String id = classDetails.getString("id");
+				int termId = classDetails.getInt("termId");
+				String grpId = classDetails.getString("grpId");
+				String crsName = classDetails.getString("crsName");
+				
+				String queryDb = "INSERT INTO CLASS (CourseID,CourseName,TermID,GroupId)";
+				queryDb += " VALUES (" + id + "," + crsName + "," + termId + "," + grpId + ");";
+				
+				statement = dbConn.prepareStatement(queryDb);
+				rs = statement.executeQuery();
+			}
+		} catch (Exception e){
+			e.printStackTrace();
+		}		
+		finally{
+			ConnectionManager.close(dbConn, statement, rs);
+		}
+		return status;
+	}
+	
 }
