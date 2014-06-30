@@ -34,11 +34,12 @@ public class EnrolledDAO {
 					int courseID = enrolled.getJSONObject(i).getInt("CourseID");
 					int termID = enrolled.getJSONObject(i).getInt("TermID");
 					int sectionID = enrolled.getJSONObject(i).getInt("SectionID");
+					int score = enrolled.getJSONObject(i).getInt("Score");
 					String uuid = enrolled.getJSONObject(i).getString("UUID");
 				
 					//SQL statement for adding of a new enrolled details
-					String insertDb = "INSERT INTO ENROLLED (StudentID,CourseID,TermID,SectionID,UUID)";
-					insertDb += " VALUES (" + studentID + "," + courseID +","+ termID + "," + sectionID + ",'" + uuid + "');";
+					String insertDb = "INSERT INTO ENROLLED (StudentID,CourseID,TermID,SectionID,UUID,Score)";
+					insertDb += " VALUES (" + studentID + "," + courseID +","+ termID + "," + sectionID + ",'" + uuid + "," + score + "');";
 				
 					statement = (Statement)(dbConn.createStatement());
 					statement.executeQuery(insertDb);

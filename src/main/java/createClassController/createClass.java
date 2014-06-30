@@ -9,6 +9,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -24,7 +26,7 @@ import DAO.*;
 
 import org.json.JSONArray;
 
-@WebServlet(name = "create_class", urlPatterns = {"/create_class"})
+@WebServlet(name = "create_class", urlPatterns = {"/tweetboard/create_class"})
 
 public class createClass extends HttpServlet {
 	
@@ -50,7 +52,7 @@ public class createClass extends HttpServlet {
         String startDate = request.getParameter("startDate");
         String startTime = request.getParameter("startTime");
         String classStart = startDate + " " + startTime;
-        
+        System.out.println("\n53 Start: " + classStart);
         Calendar cal_start = Calendar.getInstance();
         
         try{
@@ -64,7 +66,7 @@ public class createClass extends HttpServlet {
         String endDate = request.getParameter("endDate");
         String endTime = request.getParameter("endTime");
         String classEnd = endDate + " " + endTime;
-        
+        System.out.println("67 End: " + classEnd);
         Calendar cal_end = Calendar.getInstance();
         
         try{
@@ -97,7 +99,7 @@ public class createClass extends HttpServlet {
 			if(status_course){
 				courseID = getCourseID(courseDetails);
 			} else {
-				System.out.println ("100 Course not added");
+				System.out.println ("100 Course was not added");
 			}
         }
 /*____________________________________________________________________________________________________*/
@@ -120,7 +122,7 @@ public class createClass extends HttpServlet {
 			if(status_term){
 				termID = getTermID(termDetails);
 			} else {
-				System.out.println ("123 Term not added");
+				System.out.println ("123 Term was not added");
 			}
         }
 /*____________________________________________________________________________________________________*/
@@ -143,7 +145,7 @@ public class createClass extends HttpServlet {
         	if(status_section){
         		sectionID = getSectionID(sectionDetails);
         	} else {
-        		System.out.println ("146 Section not added");
+        		System.out.println ("146 Section was not added");
         	}
         }
         
@@ -155,6 +157,11 @@ public class createClass extends HttpServlet {
  */
         
         JSONArray studentIdList = addStudents("C:/Users/chusung/Desktop/Studentlist.csv");
+        if(studentIdList.length()<=0){
+        	System.out.println("159 Students were not added!");
+        } else {
+        	System.out.println("160 " + studentIdList.length() + " students were added");
+        }
 /*____________________________________________________________________________________________________*/
         
 /*
@@ -193,6 +200,8 @@ public class createClass extends HttpServlet {
         	info.put("CourseID", courseID);
         	info.put("TermID", termID);
         	info.put("SectionID", sectionID);
+        	int score = 0;
+        	info.put("Score", score);
         	UUID uuid = UUID.randomUUID();
         	info.put("UUID", uuid.toString());
         	
@@ -201,9 +210,9 @@ public class createClass extends HttpServlet {
         
         boolean status_enrolled = addEnrolled(enrolled);
         if(status_enrolled){
-        	System.out.println("204 Enrolled added successfully!");
+        	System.out.println("209 Enrolled added successfully!");
         } else {
-        	System.out.println("206 Enrolled was not added!");
+        	System.out.println("211 Enrolled was not added!");
         }
 /*____________________________________________________________________________________________________*/
 	}
@@ -252,13 +261,24 @@ public class createClass extends HttpServlet {
 	        try {
 	        	br = new BufferedReader (new FileReader(csvFile));
 	        	while ((line = br.readLine()) != null){
-	        		String uuid = UUID.randomUUID().toString();
 	        		String[] student =  line.split(csvSplitBy);
 	        		JSONObject studentDetails = new JSONObject();
-	        		studentDetails.put("name",student[1]); 
-	        		studentDetails.put("email",student[2]);
+	        		String uuid = UUID.randomUUID().toString();
 	        		studentDetails.put("uuid", uuid);
-	        		studentList.put(studentDetails);
+	        		
+	        		for(int i=0; i<student.length; i++){
+	        			try{
+	        				Integer.parseInt(student[i]);
+	        			} catch (Exception e) {
+	        				boolean verifyEmail = checkWhetherEmail(student[i]);
+	        				if(verifyEmail){
+	        					studentDetails.put("email",student[i]);
+	        				} else {
+	        					studentDetails.put("name",student[i]); 
+	        				}
+	        			} 
+	        		}
+	               	studentList.put(studentDetails);
 	        	}
 	        	//Calling the StudentDAO to add the students into database
 	        	studentIDs = StudentDAO.addStudent(studentList);
@@ -401,6 +421,21 @@ public class createClass extends HttpServlet {
     		}
     	}
     	return toReturn;
+    }
+/*____________________________________________________________________________________________________*/ 
+
+/*
+ * @param 	This method is for checking whether an entry in the csv is an email address or not
+ */	
+        
+    private boolean checkWhetherEmail(String address){
+    	Pattern pattern = Pattern.compile("[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}");
+        Matcher mat = pattern.matcher(address);
+        if(mat.matches()){
+            return true;
+        }else{
+        	return false;
+        }
     }
 /*____________________________________________________________________________________________________*/ 
 }

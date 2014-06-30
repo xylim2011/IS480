@@ -7,7 +7,7 @@
 <title>Create a new class</title>
 </head>
 <body>
-	<form name="CreateClass" action="create_class">
+	<form name="CreateClass" action="createclass" method="get">
 		<fieldset>
 			<legend>Create A New Class</legend>
 			<fieldset>
@@ -41,10 +41,18 @@
 			<fieldset>
 				<label>Select a csv file to upload</label>
 				<br>
-				<input type="file" accept=".csv" ID="fileSelect" runat="server" />
+				<input type="file" accept=".csv" ID="fileSelect"/><br>
+				<button onclick = "myfunction()">Upload File</button>
+				<script>
+					function myfunction(){
+						var x = document.getElementById("myFile");
+						x.disabled = true;
+						out.print(x);
+					}
+				</script>
 			</fieldset>
 		</fieldset>
-		<button type="submit">Submit</button>
+		<button type="submit" >Submit</button>
 	</form> 
 </body>
 </html>
