@@ -7,7 +7,7 @@
 <title>Create a new class</title>
 </head>
 <body>
-	<form name="CreateClass" action="createclass" method="get">
+	<form name="CreateClass" action="create_class" method="get">
 		<fieldset>
 			<legend>Create A New Class</legend>
 			<fieldset>

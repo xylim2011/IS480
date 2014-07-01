@@ -63,7 +63,7 @@ public class CourseDAO {
 			dbConn = ConnectionManager.getConnection();
 			if(details != null){
 				String queryDb = "SELECT CourseID FROM course WHERE ";
-				queryDb += "CourseCode='" + details.getString("CourseCode") + " AND ";
+				queryDb += "CourseCode='" + details.getString("CourseCode") + "' AND ";
 				queryDb += "CourseName='" + details.getString("CourseName") +"';";
 				//Preparing the query statement 
 				statement = dbConn.prepareStatement(queryDb);

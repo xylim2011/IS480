@@ -34,6 +34,9 @@ public class TermDAO {
 				
 				statement = (Statement)(dbConn.createStatement());
 				statement.executeUpdate(insertDb);
+				
+				//Indicate the addition of the course into database is successful
+				status = true;
 			}
 		} catch (Exception e){
 			e.printStackTrace();
@@ -48,7 +51,7 @@ public class TermDAO {
 /*
  * @param	This method is to get a specific term ID from the database based on the term name
  */	
-	public static int getTermID(JSONObject details){
+	public static int getTermID(JSONObject details) {
 		Connection dbConn = null;
 		PreparedStatement statement = null;
 		ResultSet rs = null;		
@@ -59,7 +62,7 @@ public class TermDAO {
 			if(details != null){
 		
 				String queryDb = "SELECT TermID FROM term WHERE ";
-				queryDb += " TermName='" + details.getString("TermName") + "';";
+				queryDb += "TermName='" + details.getString("TermName") + "';";
 
 				statement = dbConn.prepareStatement(queryDb);
 				rs = statement.executeQuery();

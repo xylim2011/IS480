@@ -69,6 +69,7 @@ public class ClassDAO {
 				long userId = classDetails.getLong("UserID");
 				String start = classDetails.getString("StartTime");
 				String end = classDetails.getString("EndTime");
+				System.out.println("72: "+ id + "," + termId + "," + sectionId + "," + userId + "," + start+ "," + end);
 				
 				String insertDb = "INSERT INTO CLASS (CourseID,TermID,SectionID,UserID,StartTime,EndTime)";
 				insertDb += " VALUES (" + id + "," + termId + "," + sectionId + "," + userId + ",'" + start + "','" + end + "');";

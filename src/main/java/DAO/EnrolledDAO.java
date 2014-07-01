@@ -39,10 +39,10 @@ public class EnrolledDAO {
 				
 					//SQL statement for adding of a new enrolled details
 					String insertDb = "INSERT INTO ENROLLED (StudentID,CourseID,TermID,SectionID,UUID,Score)";
-					insertDb += " VALUES (" + studentID + "," + courseID +","+ termID + "," + sectionID + ",'" + uuid + "," + score + "');";
+					insertDb += " VALUES (" + studentID + "," + courseID +","+ termID + "," + sectionID + ",'" + uuid + "'," + score + ");";
 				
 					statement = (Statement)(dbConn.createStatement());
-					statement.executeQuery(insertDb);
+					statement.executeUpdate(insertDb);
 				}
 				status = true;
 			}

@@ -26,7 +26,7 @@ import DAO.*;
 
 import org.json.JSONArray;
 
-@WebServlet(name = "create_class", urlPatterns = {"/tweetboard/create_class"})
+@WebServlet(name = "create_class", urlPatterns = {"/create_class"})
 
 public class createClass extends HttpServlet {
 	
@@ -115,10 +115,12 @@ public class createClass extends HttpServlet {
         
     	//To check whether term exists in database
     	int termID = getTermID(termDetails);
+    	System.out.println("118: "+termID);
     	//If term does not exist, a value of -1 will be received here and the term will be added
         if(termID < 0){
 			boolean status_term = addTerm(termDetails);
 			//To retrieve the TermID after adding the course into database
+			System.out.println("123: "+status_term);
 			if(status_term){
 				termID = getTermID(termDetails);
 			} else {
@@ -193,8 +195,7 @@ public class createClass extends HttpServlet {
         
         JSONArray enrolled = new JSONArray();
         for(int i=0; i<studentIdList.length();i++){
-        	String extract = studentIdList.getString(i);
-        	int id = Integer.parseInt(extract);
+        	int id = studentIdList.getInt(i);
         	JSONObject info = new JSONObject();
         	info.put("StudentID", id);
         	info.put("CourseID", courseID);
@@ -263,8 +264,6 @@ public class createClass extends HttpServlet {
 	        	while ((line = br.readLine()) != null){
 	        		String[] student =  line.split(csvSplitBy);
 	        		JSONObject studentDetails = new JSONObject();
-	        		String uuid = UUID.randomUUID().toString();
-	        		studentDetails.put("uuid", uuid);
 	        		
 	        		for(int i=0; i<student.length; i++){
 	        			try{
