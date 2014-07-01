@@ -7,6 +7,7 @@ package signUpController;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.UUID;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -19,6 +20,9 @@ import javax.servlet.http.HttpSession;
 import org.json.JSONObject;
 
 
+
+
+import DAO.UserDAO;
 /**
  *
  * @author Sherman
@@ -86,11 +90,33 @@ public class sign_in extends HttpServlet {
                 String screen_name = userDetails.getString("screen_name");
                 String token = userDetails.getString("access_token");
                 String secret = userDetails.getString("access_token_secret");
+                String uuid = UUID.randomUUID().toString();
+                
                 JSONObject user_session = new JSONObject("{id:'" + user_id +"',username:'" + screen_name + "',token:'" + token + "',secret:'" + secret + "'}");
+                
+                JSONObject userInfo = new JSONObject();
+                long id = 0;
+                try{
+                	id = Long.parseLong(user_id);
+                } catch (Exception e) {
+                	e.printStackTrace();
+                }
+                userInfo.put("UserID", id);
+                userInfo.put("UUID", uuid);
+                userInfo.put("AccessToken", token);
+                userInfo.put("AccessSecret", secret);
+                
+                boolean checkUserAdded = addUser(userInfo);
+                
+                if(checkUserAdded){
+                	System.out.println("110 User was added!");
+                } else {
+                	System.out.println("112 User was not added!");
+                }    
+                
                 session.setAttribute("twitterUser",user_session);
                 response.addCookie(new Cookie("i",user_id));
                 response.sendRedirect("home");
-                
             }
 
         } 
@@ -140,5 +166,18 @@ public class sign_in extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+    
+    
+    public boolean addUser(JSONObject details){
+    	boolean toReturn = false;
+    	try{
+    		if(details != null){
+    			toReturn = UserDAO.addUser(details);
+    		}
+    	} catch (Exception e){
+    		
+    	}
+    	return toReturn;
+    }
 
 }
