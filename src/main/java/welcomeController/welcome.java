@@ -1,4 +1,4 @@
-package com.util;
+package welcomeController;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -11,6 +11,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import DAO.UserDAO;
 /**
  * Servlet implementation class welcome
  */
@@ -34,10 +38,27 @@ public class welcome extends HttpServlet {
         if (cookies != null) {
         	for (int i = 0; i < cookies.length; i++) {
         		if (cookies[i].getName().equals("i")) {
-        			if ((cookies[i].getValue() != null) || (!cookies[i].getValue().isEmpty())) {
-        				redirect = "home";
+        			// split cookie based on our format: <twitterid>_<uuid> into a string array
+        			if (cookies[i].getValue() != null) {
+	        			String[] cookie = cookies[i].getValue().split("_");
+	        			// check if string array is valid
+	        			if (cookie.length == 2) {
+	        				JSONObject userDetails = new JSONObject();
+	        				try{
+	        					JSONObject authDetails = new JSONObject();
+	        					authDetails.put("userid", cookie[0]);
+	        					authDetails.put("uuid", cookie[1]);
+	        					userDetails = UserDAO.getUser(authDetails);
+	        					if (userDetails != null) {
+	        						redirect = "home";
+	        					}
+	        				}
+	        				catch (Exception e) {
+	        					e.printStackTrace();
+	        				}
+	        			}
+	        			break;
         			}
-        			break;
         		}
         	}
         }

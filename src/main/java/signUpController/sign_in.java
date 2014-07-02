@@ -19,9 +19,6 @@ import javax.servlet.http.HttpSession;
 
 import org.json.JSONObject;
 
-
-
-
 import DAO.UserDAO;
 /**
  *
@@ -50,8 +47,8 @@ public class sign_in extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         HttpSession session = request.getSession(true);
+        
         try {
-            /* TODO output your page here. You may use following sample code. */
             Twitter twitter = new Twitter();
             String type = (String) request.getParameter("type");
             String oauth_token = null;
@@ -64,17 +61,13 @@ public class sign_in extends HttpServlet {
             }
             System.out.println("58 token: " + oauth_token);
             System.out.println("59 verifier: " + oauth_verifier);
-            /*
-            Need to check if current user has his accesstoken saved in our database here before proceeding
-            */
 
             /*
-             Check for oauth_token and oauth_verifier. 
-             If present, user has authenticated. ->Request for user's access token
-             Else Ask Twitter for it first. Twitter's callback url is directed back here
+             *Check for oauth_token and oauth_verifier. 
+             *	If present, user has authenticated. ->Request for user's access token
+             *	Else Ask Twitter for it first. Twitter's callback url is directed back here
              */
             if (oauth_token == null && oauth_verifier == null) {
-                System.out.println("67 Authenticated- no " + oauth_token);
                 if (type.equals("twitter")) {
                     JSONObject authToken = twitter.startTwitterAuthentication();
                     String redirectURL = "https://api.twitter.com/oauth/authenticate?oauth_token=" + authToken.getString("oauth_token");
@@ -84,42 +77,56 @@ public class sign_in extends HttpServlet {
             else {
                
                 JSONObject userDetails = twitter.getTwitterAccessTokenFromAuthorizationCode(oauth_token, oauth_verifier);
-               
-                //save the 4 attributes in database for user
-                String user_id = userDetails.getString("user_id");
-                String screen_name = userDetails.getString("screen_name");
-                String token = userDetails.getString("access_token");
-                String secret = userDetails.getString("access_token_secret");
-                String uuid = UUID.randomUUID().toString();
                 
-                JSONObject user_session = new JSONObject("{id:'" + user_id +"',username:'" + screen_name + "',token:'" + token + "',secret:'" + secret + "'}");
-                
-                JSONObject userInfo = new JSONObject();
-                long id = 0;
-                try{
-                	id = Long.parseLong(user_id);
-                } catch (Exception e) {
-                	e.printStackTrace();
+                if ((userDetails != null) && (userDetails.getString("response_status").equals("success"))) {
+                	userDetails.remove("response_status");
+	                
+	                boolean checkUserAdded = false; 
+	                boolean checkUUIDUpdated = false;
+	                String uuid = UUID.randomUUID().toString();
+	                
+	                String userId = userDetails.getString("userid");
+	                long id = 0;
+	                try{
+	                	id = Long.parseLong(userId);
+	                } catch (Exception e) {
+	                	e.printStackTrace();
+	                }
+	                
+	                userDetails.put("uuid", uuid);
+	                
+	                JSONObject checking = new JSONObject();
+	                checking.put("userid", id);
+
+	            	if(checkUserExist(checking) <= 0){
+	                    checkUserAdded = addUser(userDetails);
+	            	} else {
+		                checking.put("uuid", uuid);
+	            		checkUUIDUpdated = updateUUID(checking);
+	            	} 
+	                
+	                if(checkUserAdded){
+	                	System.out.println("117 User was added!");
+	                } else {
+	                	System.out.println("119 User was not added!");
+	                }    
+	                
+	                if(checkUUIDUpdated){
+	                	System.out.println("121 User's UUID was updated!");
+	                } else {
+	                	System.out.println("123 User was not updated!");
+	                }
+	                
+	                
+	                
+	                session.setAttribute("twitteruser",userDetails);
+	                
+	                response.addCookie(new Cookie("i",userId + "_" + uuid));
+	                response.sendRedirect("home");
                 }
-                userInfo.put("UserID", id);
-                userInfo.put("UUID", uuid);
-                userInfo.put("AccessToken", token);
-                userInfo.put("AccessSecret", secret);
-                
-                boolean checkUserAdded = addUser(userInfo);
-                
-                if(checkUserAdded){
-                	System.out.println("110 User was added!");
-                } else {
-                	System.out.println("112 User was not added!");
-                }    
-                
-                session.setAttribute("twitterUser",user_session);
-                response.addCookie(new Cookie("i",user_id));
-                response.sendRedirect("home");
             }
 
-        } 
+        }
         catch (Exception e) {
             e.printStackTrace();
         } 
@@ -168,16 +175,37 @@ public class sign_in extends HttpServlet {
     }// </editor-fold>
     
     
-    public boolean addUser(JSONObject details){
+    public static boolean addUser(JSONObject details){
     	boolean toReturn = false;
     	try{
     		if(details != null){
     			toReturn = UserDAO.addUser(details);
     		}
     	} catch (Exception e){
-    		
+    		e.printStackTrace();
     	}
     	return toReturn;
     }
-
+    
+    public static int checkUserExist(JSONObject details){
+    	try{
+    		if(details != null){
+    			return UserDAO.checkUserExist(details);
+    		}
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    	return 0;
+    }
+    
+    public static boolean updateUUID(JSONObject details ){
+    	try{
+    		if(details != null){
+    			return UserDAO.updateUUID(details);
+    		}
+    	} catch (Exception e){
+    		e.printStackTrace();
+    	}
+    	return false;
+    }
 }

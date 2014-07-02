@@ -308,10 +308,10 @@ public class Twitter {
                 jsonresponse.put("message", "code into access token failed. oauth tokens in response were invalid");
             } else {
                 jsonresponse.put("response_status", "success");
-                jsonresponse.put("access_token", access_token);
-                jsonresponse.put("access_token_secret", access_token_secret);
-                jsonresponse.put("user_id", user_id);
-                jsonresponse.put("screen_name", screen_name);
+                jsonresponse.put("token", access_token);
+                jsonresponse.put("secret", access_token_secret);
+                jsonresponse.put("userid", user_id);
+                jsonresponse.put("screenname", screen_name);
             }
             conn.close();
         } catch (Exception e) {

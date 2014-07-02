@@ -28,7 +28,7 @@ public class getClass extends HttpServlet {
 		response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         HttpSession session = request.getSession(true);
-        String userId = (String) request.getParameter("userID");
+        String userId = ((JSONObject) session.getAttribute("twitteruser")).getString("userid");
         try{
         	JSONObject userDetails = (JSONObject)session.getAttribute("twitterUser");
         	JSONArray classes = ClassDAO.getClassTaught(userId);

@@ -38,7 +38,7 @@ public class createClass extends HttpServlet {
 		response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         HttpSession session = request.getSession(true);
-        String userId = ((JSONObject) session.getAttribute("twitterUser")).getString("id");
+        String userId = ((JSONObject) session.getAttribute("twitteruser")).getString("userid");
         long uID = Long.parseLong(userId);
         
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY HH:mm");
